@@ -1,6 +1,5 @@
 #include "Vector.h"
 
-
 Vector::Vector(int n)
 {
     if (n < 0)
