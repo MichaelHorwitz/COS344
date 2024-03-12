@@ -53,6 +53,32 @@ int Matrix::getN() const {
     return n;
 }
 
+Matrix Matrix::operator*(const Matrix matrix) const {
+    if (m != matrix.n) {
+        throw MathExceptions::InvalidMatrixMultiplication;
+    }
+    Matrix newMatrix(n, matrix.m);
+    for (int i = 0; i < n; ++i) {
+        for (int j = 0; j < matrix.m; ++j) {
+            double curr = 0;
+            for (int k = 0; k < m; ++k) {
+                curr += arr[i][k] * arr[k][j];
+            }
+        }
+    }
+    return newMatrix;
+}
+
+Matrix Matrix::operator*(const double s) const {
+    Matrix newMatrix(n, m, arr);
+    for (int i = 0; i < n; ++i) {
+        for (int j = 0; j < m; ++j) {
+            newMatrix[i][j] *= s;
+        }
+    }
+    return newMatrix;
+}
+
 SquareMatrix::SquareMatrix(int n) : Matrix(n, n){
 
 }
