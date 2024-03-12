@@ -79,6 +79,19 @@ Matrix Matrix::operator*(const double s) const {
     return newMatrix;
 }
 
+Matrix Matrix::operator+(const Matrix matrix) const {
+    Matrix newMatrix(n, m, arr);
+    if (n != matrix.n || m != matrix.m){
+        throw MathExceptions::InvalidMatrixAddition;
+    }
+    for (int i = 0; i < n; ++i) {
+        for (int j = 0; j < m; ++j) {
+            newMatrix.arr[i][j] += matrix.arr[i][j];
+        }
+    }
+    return newMatrix;
+}
+
 SquareMatrix::SquareMatrix(int n) : Matrix(n, n){
 
 }
