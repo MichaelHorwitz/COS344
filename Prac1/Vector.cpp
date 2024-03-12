@@ -101,3 +101,27 @@ Vector Vector::crossProduct(const Vector w) const {
 
     return newVector;
 }
+
+Vector Vector::unitVector() const {
+    double mag = this->magnitude();
+    Vector newVector(*this);
+    for (int i = 0; i < n; ++i) {
+        newVector.arr[i] /= mag;
+    }
+    return newVector;
+}
+
+int Vector::getN() const {
+    return n;
+}
+
+Vector::operator Matrix() const {
+    auto ** matrixArr = new double* [n];
+    for (int i = 0; i < n; ++i) {
+        matrixArr[i] = new double[1];
+        matrixArr[i][0] = arr[i];
+    }
+    Matrix matrix(n, 1, matrixArr);
+}
+
+
