@@ -1,6 +1,9 @@
 #include "Matrix.h"
 Matrix::~Matrix(){
-
+    for (int i = 0; i < n; ++i) {
+        delete [] arr[i];
+    }
+    delete [] arr;
 }
 Matrix::Matrix(int n, int m){
     if (n < 0 || m <0)
@@ -40,4 +43,34 @@ Matrix::Matrix::Matrix(const Matrix& inMatrix){
             arr[i][j] = inMatrix.arr[i][j];
         }
     }
+}
+
+int Matrix::getM() const {
+    return m;
+}
+
+int Matrix::getN() const {
+    return n;
+}
+
+SquareMatrix::SquareMatrix(int n) : Matrix(n, n){
+
+}
+
+SquareMatrix::SquareMatrix(int n, double ** arr) : Matrix(n, n, arr){
+
+}
+
+SquareMatrix::~SquareMatrix() {
+
+}
+
+IdentityMatrix::IdentityMatrix(int n) : SquareMatrix(n){
+    for (int i = 0; i < n; ++i) {
+        arr[i][i] = 1;
+    }
+}
+
+IdentityMatrix::~IdentityMatrix() {
+
 }
