@@ -84,3 +84,20 @@ double Vector::magnitude() const {
     }
     return std::sqrt(sumOfSquares);
 }
+
+Vector Vector::crossProduct(const Vector w) const {
+    if(n != 3 || w.n !=3){
+        throw MathExceptions::InvalidCrossProduct;
+    }
+    Vector newVector(3);
+
+    for (int i = 0; i < n; ++i) {
+        int firstIndex = (i + 1) % 3, secondIndex = (i + 2) % 3;
+        newVector.arr[i] = arr[firstIndex] * w.arr [secondIndex] - arr[secondIndex] * arr[firstIndex];
+    }
+    //newVector.arr[0] = arr[1] * w.arr[2] - arr[2] * w.arr[1];
+    //newVector.arr[1] = arr[2] * w.arr[0] - arr[0] * w.arr[2];
+    //newVector.arr[2] = arr[0] * w.arr[1] - arr[1] * w.arr[0];
+
+    return newVector;
+}
