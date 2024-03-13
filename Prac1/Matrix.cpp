@@ -92,6 +92,16 @@ Matrix Matrix::operator+(const Matrix matrix) const {
     return newMatrix;
 }
 
+Matrix Matrix::operator~() const {
+    Matrix newMatrix(m, n);
+    for (int i = 0; i < n; ++i) {
+        for (int j = 0; j < m; ++j) {
+            newMatrix.arr[j][i] = arr[i][j];
+        }
+    }
+    return newMatrix;
+}
+
 SquareMatrix::SquareMatrix(int n) : Matrix(n, n){
 
 }
