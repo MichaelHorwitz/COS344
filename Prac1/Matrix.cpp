@@ -129,13 +129,23 @@ SquareMatrix SquareMatrix::operator!() const {
         }
         //Subtract from every row below
         for (int row = currElem; row < n; ++row) {
+            double multiplier = arr[row][currElem];
             for (int col = 0; col < n; ++col) {
-                arr[row][col] -= arr[currElem][col];
-                idMatrix.arr[row][col] -= idMatrix[currElem][col];
+                arr[row][col] -= arr[currElem][col] * multiplier;
+                idMatrix.arr[row][col] -= idMatrix[currElem][col] * multiplier;
             }
         }
     }
-    return SquareMatrix(0);
+    for (int currElem = n - 2; currElem >= 0; --currElem) {
+        for (int row = currElem; row >= 0; --row) {
+            double multiplier = arr[row][currElem];
+            for (int col = n-1; col >= currElem; --col) {
+                arr[row][col] -= arr[currElem][col] * multiplier;
+                idMatrix.arr[row][col] -= idMatrix[currElem][col] * multiplier;
+            }
+        }
+    }
+    return idMatrix;
 }
 
 IdentityMatrix::IdentityMatrix(int n) : SquareMatrix(n){
