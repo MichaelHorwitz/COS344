@@ -102,6 +102,8 @@ Matrix Matrix::operator~() const {
     return newMatrix;
 }
 
+
+
 SquareMatrix::SquareMatrix(int n) : Matrix(n, n){
 
 }
@@ -112,6 +114,28 @@ SquareMatrix::SquareMatrix(int n, double ** arr) : Matrix(n, n, arr){
 
 SquareMatrix::~SquareMatrix() {
 
+}
+
+SquareMatrix SquareMatrix::operator!() const {
+    SquareMatrix newMatrix(n, arr);
+    IdentityMatrix idMatrix(n);
+    //For every nth row
+    for (int currElem = 0; currElem < n; ++currElem) {
+        //divide to get 1 at the begining
+        for (int j = 0; j < n; ++j) {
+            double divisor = arr[0][j];
+            arr[currElem][j] /= divisor;
+            idMatrix.arr[currElem][j] /= divisor;
+        }
+        //Subtract from every row below
+        for (int row = currElem; row < n; ++row) {
+            for (int col = 0; col < n; ++col) {
+                arr[row][col] -= arr[currElem][col];
+                idMatrix.arr[row][col] -= idMatrix[currElem][col];
+            }
+        }
+    }
+    return SquareMatrix(0);
 }
 
 IdentityMatrix::IdentityMatrix(int n) : SquareMatrix(n){
