@@ -148,9 +148,6 @@ SquareMatrix SquareMatrix::operator!() const {
     return idMatrix;
 }
 
-double SquareMatrix::determinant() const {
-    return 0;
-}
 double recDeterminant(double** arr, int n){
     if (n == 2){
         return arr[0][0] * arr[1][1] - arr[0][1] * arr[1][0];
@@ -178,6 +175,16 @@ double recDeterminant(double** arr, int n){
     }
     return deter;
 }
+
+double SquareMatrix::determinant() const {
+    return recDeterminant(arr, n);
+}
+
+Vector SquareMatrix::solve(const Vector) const {
+    return Vector(0);
+}
+
+
 
 IdentityMatrix::IdentityMatrix(int n) : SquareMatrix(n){
     for (int i = 0; i < n; ++i) {
