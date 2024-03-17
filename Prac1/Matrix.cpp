@@ -116,7 +116,7 @@ SquareMatrix::~SquareMatrix() {
 
 }
 
-void SquareMatrix::upperTriangular(Vector& solutionVector) const{
+/*void SquareMatrix::upperTriangular(Vector& solutionVector) const{
     //For every nth row
     for (int currElem = 0; currElem < n; ++currElem) {
         //divide to get 1 at the begining
@@ -134,7 +134,7 @@ void SquareMatrix::upperTriangular(Vector& solutionVector) const{
             }
         }
     }
-}
+}*/
 
 SquareMatrix SquareMatrix::operator!() const {
     SquareMatrix newMatrix(n, arr);
@@ -203,7 +203,7 @@ double SquareMatrix::determinant() const {
 Vector SquareMatrix::solve(const Vector inVector) const {
     Vector newVector(inVector);
     SquareMatrix tempSM(*this);
-    tempSM.upperTriangular(newVector);
+    //tempSM.upperTriangular(newVector);
     for (int row = n-1; row >= 0; ++row) {
         for (int col = n-1; col >= row; ++col) {
             newVector[col] = newVector[col] - tempSM[row][col];
