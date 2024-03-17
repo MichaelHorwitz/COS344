@@ -116,6 +116,26 @@ SquareMatrix::~SquareMatrix() {
 
 }
 
+void SquareMatrix::upperTriangular(Vector& solutionVector) const{
+    //For every nth row
+    for (int currElem = 0; currElem < n; ++currElem) {
+        //divide to get 1 at the begining
+        for (int j = 0; j < n; ++j) {
+            double divisor = arr[0][j];
+            arr[currElem][j] /= divisor;
+            solutionVector[currElem] /= divisor;
+        }
+        //Subtract from every row below
+        for (int row = currElem; row < n; ++row) {
+            double multiplier = arr[row][currElem];
+            for (int col = 0; col < n; ++col) {
+                arr[row][col] -= arr[currElem][col] * multiplier;
+                solutionVector[row] -= solutionVector[currElem] * multiplier;
+            }
+        }
+    }
+}
+
 SquareMatrix SquareMatrix::operator!() const {
     SquareMatrix newMatrix(n, arr);
     IdentityMatrix idMatrix(n);
@@ -123,24 +143,24 @@ SquareMatrix SquareMatrix::operator!() const {
     for (int currElem = 0; currElem < n; ++currElem) {
         //divide to get 1 at the begining
         for (int j = 0; j < n; ++j) {
-            double divisor = arr[0][j];
-            arr[currElem][j] /= divisor;
+            double divisor = newMatrix.arr[0][j];
+            newMatrix.arr[currElem][j] /= divisor;
             idMatrix.arr[currElem][j] /= divisor;
         }
         //Subtract from every row below
         for (int row = currElem; row < n; ++row) {
             double multiplier = arr[row][currElem];
             for (int col = 0; col < n; ++col) {
-                arr[row][col] -= arr[currElem][col] * multiplier;
+                newMatrix.arr[row][col] -= newMatrix.arr[currElem][col] * multiplier;
                 idMatrix.arr[row][col] -= idMatrix[currElem][col] * multiplier;
             }
         }
     }
     for (int currElem = n - 2; currElem >= 0; --currElem) {
         for (int row = currElem; row >= 0; --row) {
-            double multiplier = arr[row][currElem];
+            double multiplier = newMatrix.arr[row][currElem];
             for (int col = n-1; col >= currElem; --col) {
-                arr[row][col] -= arr[currElem][col] * multiplier;
+                newMatrix.arr[row][col] -= newMatrix.arr[currElem][col] * multiplier;
                 idMatrix.arr[row][col] -= idMatrix[currElem][col] * multiplier;
             }
         }
@@ -180,8 +200,16 @@ double SquareMatrix::determinant() const {
     return recDeterminant(arr, n);
 }
 
-Vector SquareMatrix::solve(const Vector) const {
-    return Vector(0);
+Vector SquareMatrix::solve(const Vector inVector) const {
+    Vector newVector(inVector);
+    SquareMatrix tempSM(*this);
+    tempSM.upperTriangular(newVector);
+    for (int row = n-1; row >= 0; ++row) {
+        for (int col = n-1; col >= row; ++col) {
+            newVector[col] = newVector[col] - tempSM[row][col];
+        }
+    }
+    return newVector;
 }
 
 

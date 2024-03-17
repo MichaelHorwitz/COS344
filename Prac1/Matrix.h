@@ -55,6 +55,7 @@ class SquareMatrix : public Matrix
 public:
     SquareMatrix(int);
     SquareMatrix(int, double **);
+    void upperTriangular(Vector&) const;
     virtual ~SquareMatrix();
     Vector solve(const Vector) const;
     double determinant() const;
