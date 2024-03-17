@@ -1,11 +1,13 @@
 #include "Matrix.h"
 Matrix::~Matrix(){
     for (int i = 0; i < n; ++i) {
-        delete [] arr[i];
+        //delete [] arr[i];
     }
-    delete [] arr;
+    //delete [] arr;
 }
 Matrix::Matrix(int n, int m){
+    this->n = n;
+    this->m = m;
     if (n < 0 || m <0)
     {
         throw MathExceptions::InvalidMatrixSize;
@@ -93,10 +95,14 @@ Matrix Matrix::operator+(const Matrix matrix) const {
 }
 
 Matrix Matrix::operator~() const {
+    //std::cout << n;
+    //std::cout << m;
     Matrix newMatrix(m, n);
+    //std::cout << newMatrix.n;
     for (int i = 0; i < n; ++i) {
         for (int j = 0; j < m; ++j) {
             newMatrix.arr[j][i] = arr[i][j];
+            //std::cout << arr[i][j];
         }
     }
     return newMatrix;

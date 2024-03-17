@@ -27,8 +27,23 @@ void crossProduct(){
     Vector v3 = v1.crossProduct(v2);
     v3.print();
 }
-
+void transpose(){
+    int n = 2, m = 3;
+    auto arr = new double * [n];
+    for (int i = 0; i < n; ++i) {
+        arr[i] = new double[m];
+        for (int j = 0; j < m; ++j) {
+            arr[i][j] = i + j;
+        }
+    }
+    Matrix matrix(2, 3, arr);
+    matrix.print();
+    (~matrix).print();
+    matrix = ~matrix;
+    matrix.print();
+}
 int main(){
     //dotProduct();
     //crossProduct();
+    transpose();
 }
