@@ -148,15 +148,15 @@ SquareMatrix SquareMatrix::operator!() const {
             idMatrix.arr[currElem][j] /= divisor;
         }
         //Subtract from every row below
-        for (int row = currElem; row < n; ++row) {
+        /*for (int row = currElem; row < n; ++row) {
             double multiplier = arr[row][currElem];
             for (int col = 0; col < n; ++col) {
                 newMatrix.arr[row][col] -= newMatrix.arr[currElem][col] * multiplier;
                 idMatrix.arr[row][col] -= idMatrix[currElem][col] * multiplier;
             }
-        }
+        }*/
     }
-    for (int currElem = n - 2; currElem >= 0; --currElem) {
+    /*for (int currElem = n - 2; currElem >= 0; --currElem) {
         for (int row = currElem; row >= 0; --row) {
             double multiplier = newMatrix.arr[row][currElem];
             for (int col = n-1; col >= currElem; --col) {
@@ -164,7 +164,7 @@ SquareMatrix SquareMatrix::operator!() const {
                 idMatrix.arr[row][col] -= idMatrix[currElem][col] * multiplier;
             }
         }
-    }
+    }*/
     return idMatrix;
 }
 

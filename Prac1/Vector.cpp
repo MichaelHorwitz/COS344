@@ -18,12 +18,13 @@ Vector::Vector(int n)
 Vector::Vector(int n, double * arr)
 {
     this->n = n;
+    arr = new double [3];
     this->arr = arr;
 }
 
 Vector::~Vector()
 {
-    delete [] arr;
+    //delete [] arr;
 }
 
 Vector::Vector(const Vector& inVector)
@@ -93,7 +94,7 @@ Vector Vector::crossProduct(const Vector w) const {
 
     for (int i = 0; i < n; ++i) {
         int firstIndex = (i + 1) % 3, secondIndex = (i + 2) % 3;
-        newVector.arr[i] = arr[firstIndex] * w.arr [secondIndex] - arr[secondIndex] * arr[firstIndex];
+        newVector.arr[i] = (arr[firstIndex] * w.arr [secondIndex]) - (arr[secondIndex] * w.arr[firstIndex]);
     }
     //newVector.arr[0] = arr[1] * w.arr[2] - arr[2] * w.arr[1];
     //newVector.arr[1] = arr[2] * w.arr[0] - arr[0] * w.arr[2];
@@ -122,6 +123,7 @@ Vector::operator Matrix() const {
         matrixArr[i][0] = arr[i];
     }
     Matrix matrix(n, 1, matrixArr);
+    return matrix;
 }
 
 
