@@ -5,15 +5,12 @@
 #include <thread>
 #include <random>
 #include <chrono>
-#include <vector>
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
 
 #include "shader.hpp"
-#include "Matrix.h"
-#include "Vector.h"
 #include "shapes.h"
 
 #define timeDT std::chrono::_V2::steady_clock::time_point
