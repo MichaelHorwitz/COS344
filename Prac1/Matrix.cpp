@@ -217,15 +217,30 @@ double SquareMatrix::determinant() const {
 }
 
 Vector SquareMatrix::solve(const Vector inVector) const {
-    /*Vector newVector(inVector);
-    SquareMatrix tempSM(*this);
-    //tempSM.upperTriangular(newVector);
-    for (int row = n-1; row >= 0; ++row) {
-        for (int col = n-1; col >= row; ++col) {
-            newVector[col] = newVector[col] - tempSM[row][col];
+    Vector solutionVector(inVector);
+    for (int currElem = 0; currElem < n; ++currElem) {
+        //divide to get 1 at the begining
+        for (int j = 0; j < n; ++j) {
+            double divisor = arr[0][j];
+            arr[currElem][j] /= divisor;
+            solutionVector[currElem] /= divisor;
+        }
+        //Subtract from every row below
+        for (int row = currElem; row < n; ++row) {
+            double multiplier = arr[row][currElem];
+            for (int col = 0; col < n; ++col) {
+                arr[row][col] -= arr[currElem][col] * multiplier;
+                solutionVector[row] -= solutionVector[currElem] * multiplier;
+            }
         }
     }
-    return newVector;*/
+    SquareMatrix tempSM(*this);
+    for (int row = n-1; row >= 0; ++row) {
+        for (int col = n-1; col >= row; ++col) {
+            solutionVector[col] = solutionVector[col] - tempSM[row][col];
+        }
+    }
+    return solutionVector;
 }
 
 
