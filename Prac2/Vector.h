@@ -41,6 +41,7 @@ public:
             std::cout<< arr[i] << "\n";
         }
     };
+    Matrix toMatrix();
 };
 
 #endif /*VECTOR_H*/

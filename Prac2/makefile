@@ -2,7 +2,7 @@
 files = Vector.cpp Matrix.cpp shapes.cpp
 
 main: main.cpp glad.c
-	g++ -g shader.cpp $(files) main.cpp glad.c -lglfw -pthread -lGLEW -ldl -lGL -o main
+	g++ -g shader.cpp $(files) main.cpp glad.c -g -lglfw -pthread -lGLEW -ldl -lGL -o main
 
 clean:
 	rm -f *.o main

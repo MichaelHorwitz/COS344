@@ -7,19 +7,22 @@
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
 
+#include "Matrix.h"
+#include "Vector.h"
+
 using namespace glm;
 using namespace std;
 
 
 struct Shape{
-    vec2** vertices;
-    vec3* colors;
+    Vector** vertices;
+    Vector** colors;
     Shape** shapes;
     int numShapes;
 
     ~Shape();
 
-    virtual void applyMatrix(mat3x3);
+    virtual void applyMatrix(Matrix);
     virtual GLfloat* toVertexArray();
     virtual GLfloat* toColorArray();
     virtual int numPoints();
@@ -29,18 +32,18 @@ struct Shape{
 };
 
 struct Triangle: public Shape{
-    Triangle(vec2, vec2, vec2, vec3 = vec3(1.0f, 0.0f, 0.0f));
+    Triangle(Vector, Vector, Vector, Vector);
     int numVertices();
     int numColors();
     int numPoints();
 };
 
 struct Rectangle: public Shape{
-    Rectangle(vec2, vec2, vec2, vec2, vec3 = vec3(0.0f, 1.0f, 0.0f));
+    Rectangle(Vector, Vector, Vector, Vector, Vector);
 };
 
-struct House: public Shape{
-    House();
+struct Car: public Shape{
+    Car();
 };
 
 #endif /*SHAPES_H*/

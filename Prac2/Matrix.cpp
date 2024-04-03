@@ -6,13 +6,15 @@ Matrix::~Matrix(){
     //delete [] arr;
 }
 Matrix::Matrix(int n, int m){
+    //std::cout << "Into constructor";
     this->n = n;
     this->m = m;
     if (n < 0 || m <0)
     {
         throw MathExceptions::InvalidMatrixSize;
+        //return;
     }
-    
+
     arr = new double*[n];
     for (int i = 0; i < n; i++)
     {
@@ -24,7 +26,7 @@ Matrix::Matrix(int n, int m){
         {
             arr[i][j] = 0;
         }
-        
+
     }
 }
 
@@ -253,4 +255,13 @@ IdentityMatrix::IdentityMatrix(int n) : SquareMatrix(n){
 
 IdentityMatrix::~IdentityMatrix() {
 
+}
+Vector* Matrix::toVector() {
+    double * arr = new double[this->n];
+    for (int i = 0; i < n; ++i) {
+        arr[i] = this->arr[i][0];
+        std::cout << "CURR ARR: " << arr[i] << std::endl;
+    }
+    Vector * newVector = new Vector(this->n, arr);
+    return newVector;
 }

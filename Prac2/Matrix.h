@@ -48,6 +48,7 @@ public:
     }
     int getM() const;
     int getN() const;
+    Vector* toVector();
 };
 
 class SquareMatrix : public Matrix

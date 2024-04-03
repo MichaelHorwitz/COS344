@@ -18,7 +18,7 @@ Vector::Vector(int n)
 Vector::Vector(int n, double * arr)
 {
     this->n = n;
-    arr = new double [3];
+    //arr = new double [3];
     this->arr = arr;
 }
 
@@ -117,6 +117,15 @@ int Vector::getN() const {
 }
 
 Vector::operator Matrix() const {
+    auto ** matrixArr = new double* [n];
+    for (int i = 0; i < n; ++i) {
+        matrixArr[i] = new double[1];
+        matrixArr[i][0] = arr[i];
+    }
+    Matrix matrix(n, 1, matrixArr);
+    return matrix;
+}
+Matrix Vector::toMatrix() {
     auto ** matrixArr = new double* [n];
     for (int i = 0; i < n; ++i) {
         matrixArr[i] = new double[1];

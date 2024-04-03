@@ -105,7 +105,9 @@ int main()
     lastTime = glfwGetTime();
 
     //Here we create a house object
-    Shape* shp = new House();
+    Shape* shp = new Car();
+    bool firstRun = true;
+    bool firstW = true;
 
     do
     {
@@ -118,7 +120,11 @@ int main()
 
         //Here we obtain the vertices and colors for the house as two dynamic arrays.
         GLfloat *vertices = shp->toVertexArray();
-        GLfloat *colors = shp->toColorArray();
+        //GLfloat *colors = shp->toColorArray();
+        GLfloat * colors = new GLfloat[9];
+        for (int i = 0; i < 9; ++i) {
+            colors[i] = 0.3;
+        }
 
         //Here we bind the VBOs
         glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
@@ -149,7 +155,6 @@ int main()
             0,        // stride
             (void *)0 // array buffer offset
         );
-
         glDrawArrays(GL_TRIANGLES, 0, shp->numVertices()); // Starting from vertex 0; 3 vertices total -> 1 triangle
 
         glDisableVertexAttribArray(0);
@@ -158,53 +163,52 @@ int main()
         //Here we swap the buffers
         glfwSwapBuffers(window);
         glfwPollEvents();
-
         //Reminder: The examples use GLM but for the practicals you may not use GLM and all the matrix calculations needs to be done in the application not the shaders.
         if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
         {
-            mat3x3 translation = mat3x3(0.0f);
-            translation[0].x = 1;
-            translation[1].y = 1;
-            translation[1].z = 0.01;
-            translation[2].z = 1;
-            shp->applyMatrix(transpose(translation));
+            Matrix translation = Matrix(3,3);
+            translation[0][0] = 1;
+            translation[1][1] = 1;
+            translation[1][2] = 0.01;
+            translation[2][2] = 1;
+            shp->applyMatrix(translation);
         }
         if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
         {
-            mat3x3 translation = mat3x3(0.0f);
-            translation[0].x = 1;
-            translation[1].y = 1;
-            translation[1].z = -0.01;
-            translation[2].z = 1;
-            shp->applyMatrix(transpose(translation));
+            Matrix translation = Matrix(3,3);
+            translation[0][0] = 1;
+            translation[1][1] = 1;
+            translation[1][2] = -0.01;
+            translation[2][2] = 1;
+            shp->applyMatrix(translation);
         }
         if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
         {
-            mat3x3 translation = mat3x3(0.0f);
-            translation[0].x = 1;
-            translation[0].z = 0.01;
-            translation[1].y = 1;
-            translation[2].z = 1;
-            shp->applyMatrix(transpose(translation));
+            Matrix translation = Matrix(3,3);
+            translation[0][0] = 1;
+            translation[0][2] = 0.01;
+            translation[1][1] = 1;
+            translation[2][2] = 1;
+            shp->applyMatrix(translation);
         }
         if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
         {
-            mat3x3 translation = mat3x3(0.0f);
-            translation[0].x = 1;
-            translation[0].z = -0.01;
-            translation[1].y = 1;
-            translation[2].z = 1;
-            shp->applyMatrix(transpose(translation));
+            Matrix translation = Matrix(3,3);
+            translation[0][0] = 1;
+            translation[0][2] = -0.01;
+            translation[1][1] = 1;
+            translation[2][2] = 1;
+            shp->applyMatrix(translation);
         }
 
         delete[] vertices;
         delete[] colors;
 
         lastTime = currentTime;
-        cout << "FPS: " << 1 / deltaTime << endl;
-
+        //cout << "FPS: " << 1 / deltaTime << endl;
+        firstRun = false;
     } while (glfwGetKey(window, GLFW_KEY_SPACE) != GLFW_PRESS &&
              glfwWindowShouldClose(window) == 0);
 
-    delete shp;
+    //delete shp;
 }
