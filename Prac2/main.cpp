@@ -64,14 +64,7 @@ inline GLFWwindow *setUp()
     startUpGLEW();
     return window;
 }
-void mat3ToGLfloatArray(const glm::mat3& matrix, GLfloat* array) {
-    int index = 0;
-    for (int col = 0; col < 3; ++col) {
-        for (int row = 0; row < 3; ++row) {
-            array[index++] = matrix[row][col]; // Column-major order
-        }
-    }
-}
+
 int main()
 {
     //This is the normal setup function calls.
@@ -111,13 +104,8 @@ int main()
     double lastTime;
     lastTime = glfwGetTime();
 
-    GLuint transformationMatrixLocation = glGetUniformLocation(programID, "transformationMatrix");
-
     //Here we create a house object
     Shape* shp = new House();
-
-    //Here we create the global transformation matrix that will be constantly updated.
-    mat3 m = mat3(1.0f);
 
     do
     {
@@ -143,23 +131,23 @@ int main()
         glEnableVertexAttribArray(0);
         glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
         glVertexAttribPointer(
-                0,        // location 0 in the vertex shader.
-                2,        // size
-                GL_FLOAT, // type
-                GL_FALSE, // normalized?
-                0,        // stride
-                (void *)0 // array buffer offset
+            0,        // location 0 in the vertex shader.
+            2,        // size
+            GL_FLOAT, // type
+            GL_FALSE, // normalized?
+            0,        // stride
+            (void *)0 // array buffer offset
         );
 
         glEnableVertexAttribArray(1);
         glBindBuffer(GL_ARRAY_BUFFER, colorbuffer);
         glVertexAttribPointer(
-                1,        // location 1 in the vertex shader.
-                3,        // size
-                GL_FLOAT, // type
-                GL_FALSE, // normalized?
-                0,        // stride
-                (void *)0 // array buffer offset
+            1,        // location 1 in the vertex shader.
+            3,        // size
+            GL_FLOAT, // type
+            GL_FALSE, // normalized?
+            0,        // stride
+            (void *)0 // array buffer offset
         );
 
         glDrawArrays(GL_TRIANGLES, 0, shp->numVertices()); // Starting from vertex 0; 3 vertices total -> 1 triangle
@@ -167,8 +155,11 @@ int main()
         glDisableVertexAttribArray(0);
         glDisableVertexAttribArray(1);
 
+        //Here we swap the buffers
+        glfwSwapBuffers(window);
+        glfwPollEvents();
+
         //Reminder: The examples use GLM but for the practicals you may not use GLM and all the matrix calculations needs to be done in the application not the shaders.
-        //Here we update the global transformation matrix m.
         if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
         {
             mat3x3 translation = mat3x3(0.0f);
@@ -176,7 +167,7 @@ int main()
             translation[1].y = 1;
             translation[1].z = 0.01;
             translation[2].z = 1;
-            m = translation * m;
+            shp->applyMatrix(transpose(translation));
         }
         if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
         {
@@ -185,7 +176,7 @@ int main()
             translation[1].y = 1;
             translation[1].z = -0.01;
             translation[2].z = 1;
-            m = translation * m;
+            shp->applyMatrix(transpose(translation));
         }
         if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
         {
@@ -194,7 +185,7 @@ int main()
             translation[0].z = 0.01;
             translation[1].y = 1;
             translation[2].z = 1;
-            m = translation * m;
+            shp->applyMatrix(transpose(translation));
         }
         if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
         {
@@ -203,18 +194,8 @@ int main()
             translation[0].z = -0.01;
             translation[1].y = 1;
             translation[2].z = 1;
-            m = translation * m;
+            shp->applyMatrix(transpose(translation));
         }
-
-        GLfloat tempMatrix[9];
-        mat3ToGLfloatArray(m,tempMatrix);
-
-        //Here we pass the arratized transformation matrix to the vertex shader to do the calculations for us.
-        glUniformMatrix3fv(transformationMatrixLocation, 1, GL_FALSE, tempMatrix);
-
-        //Here we swap the buffers
-        glfwSwapBuffers(window);
-        glfwPollEvents();
 
         delete[] vertices;
         delete[] colors;
