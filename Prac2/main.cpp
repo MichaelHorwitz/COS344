@@ -4,13 +4,19 @@
 #include <vector>
 #include <thread>
 #include <random>
-#include <chrono> 
+#include <chrono>
+#include <vector>
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
 
 #include "shader.hpp"
+#include "Matrix.h"
+#include "Vector.h"
+#include "shapes.h"
+
+#define timeDT std::chrono::_V2::steady_clock::time_point
 
 using namespace glm;
 using namespace std;
@@ -61,9 +67,17 @@ inline GLFWwindow *setUp()
     startUpGLEW();
     return window;
 }
-
+void mat3ToGLfloatArray(const glm::mat3& matrix, GLfloat* array) {
+    int index = 0;
+    for (int col = 0; col < 3; ++col) {
+        for (int row = 0; row < 3; ++row) {
+            array[index++] = matrix[row][col]; // Column-major order
+        }
+    }
+}
 int main()
 {
+    //This is the normal setup function calls.
     GLFWwindow *window;
     try
     {
@@ -75,5 +89,144 @@ int main()
         throw;
     }
 
-    //Add code here
+    //Here we set the background color to a shade of gray.
+    glClearColor(0.2, 0.2, 0.2, 0.2);
+
+    //Here we create a VAO
+    GLuint VertexArrayID;
+    glGenVertexArrays(1, &VertexArrayID);
+    glBindVertexArray(VertexArrayID);
+
+    //This is needed for sticky keys
+    glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
+
+    //Here we compile and load the shaders. First we pass the vertex shader then the fragment shader.
+    GLuint programID = LoadShaders("vertexShader.glsl", "fragmentShader.glsl");
+
+    timeDT lastChanged = chrono::steady_clock::now();
+
+    //Here we create two VBOs
+    GLuint vertexbuffer;
+    glGenBuffers(1, &vertexbuffer);
+    GLuint colorbuffer;
+    glGenBuffers(1, &colorbuffer);
+
+    double lastTime;
+    lastTime = glfwGetTime();
+
+    GLuint transformationMatrixLocation = glGetUniformLocation(programID, "transformationMatrix");
+
+    //Here we create a house object
+    Shape* shp = new House();
+
+    //Here we create the global transformation matrix that will be constantly updated.
+    mat3 m = mat3(1.0f);
+
+    do
+    {
+        float currentTime = glfwGetTime();
+        float deltaTime = currentTime - lastTime;
+
+        //Here we clear the color and depth buffer bits.
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glUseProgram(programID);
+
+        //Here we obtain the vertices and colors for the house as two dynamic arrays.
+        GLfloat *vertices = shp->toVertexArray();
+        GLfloat *colors = shp->toColorArray();
+
+        //Here we bind the VBOs
+        glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat[shp->numVertices()]), vertices, GL_STATIC_DRAW);
+
+        glBindBuffer(GL_ARRAY_BUFFER, colorbuffer);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat[shp->numColors()]), colors, GL_STATIC_DRAW);
+
+        //Here we enable the VAO and populate it.
+        glEnableVertexAttribArray(0);
+        glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
+        glVertexAttribPointer(
+                0,        // location 0 in the vertex shader.
+                2,        // size
+                GL_FLOAT, // type
+                GL_FALSE, // normalized?
+                0,        // stride
+                (void *)0 // array buffer offset
+        );
+
+        glEnableVertexAttribArray(1);
+        glBindBuffer(GL_ARRAY_BUFFER, colorbuffer);
+        glVertexAttribPointer(
+                1,        // location 1 in the vertex shader.
+                3,        // size
+                GL_FLOAT, // type
+                GL_FALSE, // normalized?
+                0,        // stride
+                (void *)0 // array buffer offset
+        );
+
+        glDrawArrays(GL_TRIANGLES, 0, shp->numVertices()); // Starting from vertex 0; 3 vertices total -> 1 triangle
+
+        glDisableVertexAttribArray(0);
+        glDisableVertexAttribArray(1);
+
+        //Reminder: The examples use GLM but for the practicals you may not use GLM and all the matrix calculations needs to be done in the application not the shaders.
+        //Here we update the global transformation matrix m.
+        if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+        {
+            mat3x3 translation = mat3x3(0.0f);
+            translation[0].x = 1;
+            translation[1].y = 1;
+            translation[1].z = 0.01;
+            translation[2].z = 1;
+            m = translation * m;
+        }
+        if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+        {
+            mat3x3 translation = mat3x3(0.0f);
+            translation[0].x = 1;
+            translation[1].y = 1;
+            translation[1].z = -0.01;
+            translation[2].z = 1;
+            m = translation * m;
+        }
+        if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+        {
+            mat3x3 translation = mat3x3(0.0f);
+            translation[0].x = 1;
+            translation[0].z = 0.01;
+            translation[1].y = 1;
+            translation[2].z = 1;
+            m = translation * m;
+        }
+        if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+        {
+            mat3x3 translation = mat3x3(0.0f);
+            translation[0].x = 1;
+            translation[0].z = -0.01;
+            translation[1].y = 1;
+            translation[2].z = 1;
+            m = translation * m;
+        }
+
+        GLfloat tempMatrix[9];
+        mat3ToGLfloatArray(m,tempMatrix);
+
+        //Here we pass the arratized transformation matrix to the vertex shader to do the calculations for us.
+        glUniformMatrix3fv(transformationMatrixLocation, 1, GL_FALSE, tempMatrix);
+
+        //Here we swap the buffers
+        glfwSwapBuffers(window);
+        glfwPollEvents();
+
+        delete[] vertices;
+        delete[] colors;
+
+        lastTime = currentTime;
+        cout << "FPS: " << 1 / deltaTime << endl;
+
+    } while (glfwGetKey(window, GLFW_KEY_SPACE) != GLFW_PRESS &&
+             glfwWindowShouldClose(window) == 0);
+
+    delete shp;
 }
