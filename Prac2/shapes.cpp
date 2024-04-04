@@ -135,8 +135,6 @@ Triangle::Triangle(Vector point1, Vector point2, Vector point3, Vector color)
     for (int i = 0; i < 3; i++)
     {
         colors[i] = new Vector(color);
-        //std::cout << "COLOR: "  << i << std::endl;
-        //colors[i]->print();
     }
 }
 
@@ -161,8 +159,7 @@ Rectangle::Rectangle(Vector ul, Vector ur, Vector ll, Vector lr, Vector color)
     shapes = new Shape *[numShapes];
     shapes[0] = new Triangle(ur, ul, ll, color);
     shapes[1] = new Triangle(ll, lr, ur, color);
-    int n = numPoints();
-    vertices = new Vector *[n];
+    vertices = new Vector *[numPoints()];
     int count = 0;
     for (int i = 0; i < numShapes; i++)
     {
@@ -172,17 +169,66 @@ Rectangle::Rectangle(Vector ul, Vector ur, Vector ll, Vector lr, Vector color)
         }
     }
 
-    colors = new Vector* [n];
+    colors = new Vector* [numPoints()];
 
-    for (int i = 0; i < n; i++)
+    for (int i = 0; i < numPoints(); i++)
     {
         colors[i] = new Vector(color);
     }
 }
 
+Circle::Circle(int numVertices, double length, double x, double y, Vector colVector) {
+    this->length = length;
+    this->numShapes = numVertices - 2;
+    this->numVertices = numShapes * 3;
+    shapes = new Shape * [numShapes];
+    this->colors = new Vector * [this->numVertices];
+    vertices = new Vector * [this->numVertices];
+
+    double spacing = 2.0 * M_PI / numVertices;
+    Vector v1 = Vector(2);
+    Vector v2 = Vector(2);
+    Vector v3 = Vector(2);
+    for (int i = 0; i < 2; ++i) {
+        double angle = i * spacing;
+        double * arr = new double[2];
+        arr[0] = x + length * cos(angle);
+        arr[1] = y + length * sin(angle);
+        if (i == 0){
+            v1 = Vector(2, arr);
+        }
+        if (i == 1){
+            v2 = Vector(2, arr);
+        }
+    }
+    for (int i = 2; i < numVertices; ++i) {
+        double angle = i * spacing;
+        double * arr = new double[2];
+        arr[0] = x + length * cos(angle);
+        arr[1] = y + length * sin(angle);
+        v2 = v3;
+        v3 = Vector(2, arr);
+        shapes[i-2] = new Triangle(v1, v2, v3, colVector);
+    }
+    int count = 0;
+    for (int i = 0; i < numShapes; i++)
+    {
+        for (int j = 0; j < shapes[i]->numPoints(); j++)
+        {
+            vertices[count++] = shapes[i]->vertices[j];
+        }
+    }
+    colors = new Vector* [numPoints()];
+
+    for (int i = 0; i < numPoints(); i++)
+    {
+        colors[i] = new Vector(colVector);
+    }
+}
+
 Car::Car()
 {
-    numShapes = 5;
+    numShapes = 6;
     shapes = new Shape*[numShapes];
     int currShape = 0;
     Vector v1 = Vector(2);
@@ -257,5 +303,10 @@ Car::Car()
     colVector[1] = 0.1;
     colVector[2] = 0.9;
     shapes[currShape++] = new Rectangle(v1, v2, v3, v4, colVector);
+
+    colVector[0] = 0.1;
+    colVector[1] = 0.1;
+    colVector[2] = 0.1;
+    shapes[currShape++] = new Circle(20, 0.5, 0, 0, colVector);
 
 }

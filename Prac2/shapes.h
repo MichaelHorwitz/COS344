@@ -42,6 +42,12 @@ struct Rectangle: public Shape{
     Rectangle(Vector, Vector, Vector, Vector, Vector);
 };
 
+struct Circle: public Shape{
+    int numVertices;
+    double length;
+    Circle(int, double, double, double, Vector);
+};
+
 struct Car: public Shape{
     Car();
 };

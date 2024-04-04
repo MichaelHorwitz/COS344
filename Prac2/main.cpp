@@ -80,7 +80,7 @@ int main()
     }
 
     //Here we set the background color to a shade of gray.
-    glClearColor(0.2, 0.2, 0.2, 0.2);
+    glClearColor(0.05, 0.05, 0.2, 0.2);
 
     //Here we create a VAO
     GLuint VertexArrayID;
@@ -176,19 +176,19 @@ int main()
         if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
         {
             Matrix translation = Matrix(3,3);
-            translation[0][0] = 1;
-            translation[1][1] = 1;
-            translation[1][2] = 0.01;
+            translation[0][0] = 1.005;
+            translation[1][1] = 1.005;
             translation[2][2] = 1;
+            translation[1][2] = -0.01;
             shp->applyMatrix(translation);
         }
         if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
         {
             Matrix translation = Matrix(3,3);
-            translation[0][0] = 1;
-            translation[1][1] = 1;
-            translation[1][2] = -0.01;
+            translation[0][0] = 0.995;
+            translation[1][1] = 0.995;
             translation[2][2] = 1;
+            translation[1][2] = 0.01;
             shp->applyMatrix(translation);
         }
         if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
