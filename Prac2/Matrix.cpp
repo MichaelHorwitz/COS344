@@ -260,7 +260,7 @@ Vector* Matrix::toVector() {
     double * arr = new double[this->n];
     for (int i = 0; i < n; ++i) {
         arr[i] = this->arr[i][0];
-        std::cout << "CURR ARR: " << arr[i] << std::endl;
+        //std::cout << "CURR ARR: " << arr[i] << std::endl;
     }
     Vector * newVector = new Vector(this->n, arr);
     return newVector;

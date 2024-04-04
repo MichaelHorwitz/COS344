@@ -103,8 +103,25 @@ int main()
 
     double lastTime;
     lastTime = glfwGetTime();
+    Vector v1 = Vector(2);
+    v1[0] = -0.5;
+    v1[1] = 0;
+
+    Vector v2 = Vector(2);
+    v2[0] = 0;
+    v2[1] = 0.25;
+
+    Vector v3 = Vector(2);
+    v3[0] = 0.5;
+    v3[1] = 0;
+
+    Vector colVector = Vector(3);
+    colVector[0] = 0.7;
+    colVector[1] = 0.7;
+    colVector[2] = 0.3;
 
     //Here we create a house object
+    //Shape* shp = new Triangle(v1, v2, v3, colVector);
     Shape* shp = new Car();
     bool firstRun = true;
     bool firstW = true;
@@ -120,9 +137,11 @@ int main()
 
         //Here we obtain the vertices and colors for the house as two dynamic arrays.
         GLfloat *vertices = shp->toVertexArray();
-        //GLfloat *colors = shp->toColorArray();
-        GLfloat * colors = new GLfloat[9];
-        for (int i = 0; i < 9; ++i) {
+        GLfloat *colors = shp->toColorArray();
+        int numPoints = shp->numColors();
+        colors = new GLfloat[numPoints];
+        //GLfloat * colors = new GLfloat[numPoints];
+        for (int i = 0; i < numPoints; ++i) {
             colors[i] = 0.3;
         }
 
