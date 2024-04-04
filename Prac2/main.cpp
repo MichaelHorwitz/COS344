@@ -67,7 +67,7 @@ inline GLFWwindow *setUp()
 
 int main()
 {
-    //This is the normal setup function calls.
+    //Standard
     GLFWwindow *window;
     try
     {
@@ -79,23 +79,17 @@ int main()
         throw;
     }
 
-    //Here we set the background color to a shade of gray.
     glClearColor(0.05, 0.05, 0.2, 0.2);
 
-    //Here we create a VAO
     GLuint VertexArrayID;
     glGenVertexArrays(1, &VertexArrayID);
     glBindVertexArray(VertexArrayID);
 
-    //This is needed for sticky keys
     glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
 
-    //Here we compile and load the shaders. First we pass the vertex shader then the fragment shader.
     GLuint programID = LoadShaders("vertexShader.glsl", "fragmentShader.glsl");
-
     timeDT lastChanged = chrono::steady_clock::now();
 
-    //Here we create two VBOs
     GLuint vertexbuffer;
     glGenBuffers(1, &vertexbuffer);
     GLuint colorbuffer;
@@ -112,67 +106,49 @@ int main()
         float currentTime = glfwGetTime();
         float deltaTime = currentTime - lastTime;
 
-        //Here we clear the color and depth buffer bits.
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glUseProgram(programID);
 
-        //Here we obtain the vertices and colors for the house as two dynamic arrays.
         GLfloat *vertices = shp->toVertexArray();
         GLfloat *colors = shp->toColorArray();
-//        cout << "NUM COL" << shp->numColors() << endl;
-//        for (int i = 0; i < shp->numColors(); ++i) {
-//            cout << colors[i] << ", ";
-//        }
-//        cout << endl;
 
-//        colors = new GLfloat[shp->numColors()];
-//        for (int i = 0; i < numPoints; ++i) {
-//            colors[i] = 0.3;
-//        }
-//        if (firstRun){
-//            for (int i = 0; i < shp->numColors(); ++i) {
-//                cout << colors[i] << ", ";
-//            }
-//        }
-
-        //Here we bind the VBOs
+        //Bind VBOS
         glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
         glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat[shp->numVertices()]), vertices, GL_STATIC_DRAW);
 
         glBindBuffer(GL_ARRAY_BUFFER, colorbuffer);
         glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat[shp->numColors()]), colors, GL_STATIC_DRAW);
 
-        //Here we enable the VAO and populate it.
+        //VAO things
         glEnableVertexAttribArray(0);
         glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
         glVertexAttribPointer(
-            0,        // location 0 in the vertex shader.
-            2,        // size
-            GL_FLOAT, // type
-            GL_FALSE, // normalized?
-            0,        // stride
-            (void *)0 // array buffer offset
+            0,
+            2,
+            GL_FLOAT,
+            GL_FALSE,
+            0,
+            (void *)0
         );
 
         glEnableVertexAttribArray(1);
         glBindBuffer(GL_ARRAY_BUFFER, colorbuffer);
         glVertexAttribPointer(
-            1,        // location 1 in the vertex shader.
-            3,        // size
-            GL_FLOAT, // type
-            GL_FALSE, // normalized?
-            0,        // stride
-            (void *)0 // array buffer offset
+            1,
+            3,
+            GL_FLOAT,
+            GL_FALSE,
+            0,
+            (void *)0
         );
-        glDrawArrays(GL_TRIANGLES, 0, shp->numVertices()); // Starting from vertex 0; 3 vertices total -> 1 triangle
+        glDrawArrays(GL_TRIANGLES, 0, shp->numVertices());
 
         glDisableVertexAttribArray(0);
         glDisableVertexAttribArray(1);
 
-        //Here we swap the buffers
+        //Swap buffers
         glfwSwapBuffers(window);
         glfwPollEvents();
-        //Reminder: The examples use GLM but for the practicals you may not use GLM and all the matrix calculations needs to be done in the application not the shaders.
         if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
         {
             Matrix translation = Matrix(3,3);
@@ -219,5 +195,5 @@ int main()
     } while (glfwGetKey(window, GLFW_KEY_SPACE) != GLFW_PRESS &&
              glfwWindowShouldClose(window) == 0);
 
-    //delete shp;
+    delete shp;
 }

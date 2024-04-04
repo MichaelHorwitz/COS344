@@ -17,7 +17,6 @@ int Shape::numPoints()
 
 GLfloat *Shape::toVertexArray()
 {
-    int n = numVertices();
     GLfloat *result = new GLfloat[numVertices()];
     if (numShapes > 0)
     {
@@ -189,7 +188,7 @@ Circle::Circle(int numVertices, double length, double x, double y, Vector colVec
     Vector v1 = Vector(2);
     Vector v2 = Vector(2);
     Vector v3 = Vector(2);
-    for (int i = 0; i < 2; ++i) {
+    for (int i = 0; i < 3; ++i) {
         double angle = i * spacing;
         double * arr = new double[2];
         arr[0] = x + length * cos(angle);
@@ -200,8 +199,12 @@ Circle::Circle(int numVertices, double length, double x, double y, Vector colVec
         if (i == 1){
             v2 = Vector(2, arr);
         }
+        if (i == 2){
+            v3 = Vector(2, arr);
+        }
     }
-    for (int i = 2; i < numVertices; ++i) {
+    shapes[0] =  new Triangle(v1, v2, v3, colVector);
+    for (int i = 3; i < numVertices; ++i) {
         double angle = i * spacing;
         double * arr = new double[2];
         arr[0] = x + length * cos(angle);
@@ -228,7 +231,7 @@ Circle::Circle(int numVertices, double length, double x, double y, Vector colVec
 
 Car::Car()
 {
-    numShapes = 6;
+    numShapes = 9;
     shapes = new Shape*[numShapes];
     int currShape = 0;
     Vector v1 = Vector(2);
@@ -237,7 +240,7 @@ Car::Car()
     Vector v4 = Vector(2);
     Vector colVector = Vector(3);
 
-    //RECT BODY
+    //1 RECT BODY
     v1[0] = -0.75;
     v1[1] = 0;
     v2[0] = 0.75;
@@ -252,7 +255,7 @@ Car::Car()
 
     shapes[currShape++] = new Rectangle(v1, v2, v3, v4, colVector);
 
-    //RECT TOP
+    //2 RECT TOP
     v1[0] = -0.50;
     v1[1] = 0.25;
     v2[0] = 0.30;
@@ -266,7 +269,7 @@ Car::Car()
     colVector[2] = 0.1;
     shapes[currShape++] = new Rectangle(v1, v2, v3, v4, colVector);
 
-    //TRIG BODY
+    //3 TRIG BODY
     v1[0] = 0.3;
     v1[1] = 0.25;
     v2[0] = 0.3;
@@ -278,7 +281,7 @@ Car::Car()
     colVector[2] = 0.1;
     shapes[currShape++] = new Triangle(v1, v2, v3, colVector);
 
-    //TRIG WINDOW
+    //4 TRIG WINDOW
     v1[0] = 0.3;
     v1[1] = 0.05;
     v2[0] = 0.3;
@@ -290,7 +293,7 @@ Car::Car()
     colVector[2] = 0.9;
     shapes[currShape++] = new Triangle(v1, v2, v3, colVector);
 
-    //RECT WINDOW
+    //5 RECT WINDOW
     v1[0] = -0.3;
     v1[1] = 0.2;
     v2[0] = 0;
@@ -304,9 +307,28 @@ Car::Car()
     colVector[2] = 0.9;
     shapes[currShape++] = new Rectangle(v1, v2, v3, v4, colVector);
 
+    //6 LEFT WHEEL
     colVector[0] = 0.1;
     colVector[1] = 0.1;
     colVector[2] = 0.1;
-    shapes[currShape++] = new Circle(20, 0.5, 0, 0, colVector);
+    shapes[currShape++] = new Circle(60, 0.15, -0.3, -0.5, colVector);
+
+    //7 LEFT RIM
+    colVector[0] = 0.4;
+    colVector[1] = 0.4;
+    colVector[2] = 0.4;
+    shapes[currShape++] = new Circle(8, 0.1, -0.3, -0.5, colVector);
+
+    //8 RIGHT WHEEL
+    colVector[0] = 0.1;
+    colVector[1] = 0.1;
+    colVector[2] = 0.1;
+    shapes[currShape++] = new Circle(60, 0.15, 0.3, -0.5, colVector);
+
+    //9 RIGHT RIM
+    colVector[0] = 0.4;
+    colVector[1] = 0.4;
+    colVector[2] = 0.4;
+    shapes[currShape++] = new Circle(8, 0.1, 0.3, -0.5, colVector);
 
 }
