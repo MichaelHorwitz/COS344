@@ -103,25 +103,6 @@ int main()
 
     double lastTime;
     lastTime = glfwGetTime();
-    Vector v1 = Vector(2);
-    v1[0] = -0.5;
-    v1[1] = 0;
-
-    Vector v2 = Vector(2);
-    v2[0] = 0;
-    v2[1] = 0.25;
-
-    Vector v3 = Vector(2);
-    v3[0] = 0.5;
-    v3[1] = 0;
-
-    Vector colVector = Vector(3);
-    colVector[0] = 0.7;
-    colVector[1] = 0.7;
-    colVector[2] = 0.3;
-
-    //Here we create a house object
-    //Shape* shp = new Triangle(v1, v2, v3, colVector);
     Shape* shp = new Car();
     bool firstRun = true;
     bool firstW = true;
@@ -138,12 +119,21 @@ int main()
         //Here we obtain the vertices and colors for the house as two dynamic arrays.
         GLfloat *vertices = shp->toVertexArray();
         GLfloat *colors = shp->toColorArray();
-        int numPoints = shp->numColors();
-        colors = new GLfloat[numPoints];
-        //GLfloat * colors = new GLfloat[numPoints];
-        for (int i = 0; i < numPoints; ++i) {
-            colors[i] = 0.3;
-        }
+//        cout << "NUM COL" << shp->numColors() << endl;
+//        for (int i = 0; i < shp->numColors(); ++i) {
+//            cout << colors[i] << ", ";
+//        }
+//        cout << endl;
+
+//        colors = new GLfloat[shp->numColors()];
+//        for (int i = 0; i < numPoints; ++i) {
+//            colors[i] = 0.3;
+//        }
+//        if (firstRun){
+//            for (int i = 0; i < shp->numColors(); ++i) {
+//                cout << colors[i] << ", ";
+//            }
+//        }
 
         //Here we bind the VBOs
         glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
@@ -183,7 +173,7 @@ int main()
         glfwSwapBuffers(window);
         glfwPollEvents();
         //Reminder: The examples use GLM but for the practicals you may not use GLM and all the matrix calculations needs to be done in the application not the shaders.
-        if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+        if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
         {
             Matrix translation = Matrix(3,3);
             translation[0][0] = 1;
@@ -192,7 +182,7 @@ int main()
             translation[2][2] = 1;
             shp->applyMatrix(translation);
         }
-        if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+        if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
         {
             Matrix translation = Matrix(3,3);
             translation[0][0] = 1;
@@ -201,7 +191,7 @@ int main()
             translation[2][2] = 1;
             shp->applyMatrix(translation);
         }
-        if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+        if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
         {
             Matrix translation = Matrix(3,3);
             translation[0][0] = 1;
@@ -210,7 +200,7 @@ int main()
             translation[2][2] = 1;
             shp->applyMatrix(translation);
         }
-        if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+        if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
         {
             Matrix translation = Matrix(3,3);
             translation[0][0] = 1;

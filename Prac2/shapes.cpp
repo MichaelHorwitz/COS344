@@ -135,6 +135,8 @@ Triangle::Triangle(Vector point1, Vector point2, Vector point3, Vector color)
     for (int i = 0; i < 3; i++)
     {
         colors[i] = new Vector(color);
+        //std::cout << "COLOR: "  << i << std::endl;
+        //colors[i]->print();
     }
 }
 
@@ -180,37 +182,80 @@ Rectangle::Rectangle(Vector ul, Vector ur, Vector ll, Vector lr, Vector color)
 
 Car::Car()
 {
-    numShapes = 2;
+    numShapes = 5;
     shapes = new Shape*[numShapes];
+    int currShape = 0;
     Vector v1 = Vector(2);
-    v1[0] = -0.5;
-    v1[1] = 0;
-
     Vector v2 = Vector(2);
-    v2[0] = 0;
-    v2[1] = 0.25;
-
     Vector v3 = Vector(2);
-    v3[0] = 0.5;
-    v3[1] = 0;
-
+    Vector v4 = Vector(2);
     Vector colVector = Vector(3);
-    colVector[0] = 0.7;
-    colVector[1] = 0.7;
-    colVector[2] = 0.3;
 
-    Shape* shp = new Triangle(v1, v2, v3, colVector);
-    shapes[0] = shp;
-
+    //RECT BODY
     v1[0] = -0.75;
     v1[1] = 0;
     v2[0] = 0.75;
     v2[1] = 0;
     v3[0] = -0.75;
     v3[1] = -0.5;
-    Vector v4 = Vector(2);
     v4[0] = 0.75;
     v4[1] = -0.5;
-    Shape * rect = new Rectangle(v1, v2, v3, v4, colVector);
-    shapes[1] = rect;
+    colVector[0] = 0.9;
+    colVector[1] = 0.9;
+    colVector[2] = 0.1;
+
+    shapes[currShape++] = new Rectangle(v1, v2, v3, v4, colVector);
+
+    //RECT TOP
+    v1[0] = -0.50;
+    v1[1] = 0.25;
+    v2[0] = 0.30;
+    v2[1] = 0.25;
+    v3[0] = -0.50;
+    v3[1] = 0;
+    v4[0] = 0.30;
+    v4[1] = 0;
+    colVector[0] = 0.4;
+    colVector[1] = 0.5;
+    colVector[2] = 0.1;
+    shapes[currShape++] = new Rectangle(v1, v2, v3, v4, colVector);
+
+    //TRIG BODY
+    v1[0] = 0.3;
+    v1[1] = 0.25;
+    v2[0] = 0.3;
+    v2[1] = 0;
+    v3[0] = 0.6;
+    v3[1] = 0;
+    colVector[0] = 0.4;
+    colVector[1] = 0.5;
+    colVector[2] = 0.1;
+    shapes[currShape++] = new Triangle(v1, v2, v3, colVector);
+
+    //TRIG WINDOW
+    v1[0] = 0.3;
+    v1[1] = 0.05;
+    v2[0] = 0.3;
+    v2[1] = 0.20;
+    v3[0] = 0.5;
+    v3[1] = 0.05;
+    colVector[0] = 0.1;
+    colVector[1] = 0.1;
+    colVector[2] = 0.9;
+    shapes[currShape++] = new Triangle(v1, v2, v3, colVector);
+
+    //RECT WINDOW
+    v1[0] = -0.3;
+    v1[1] = 0.2;
+    v2[0] = 0;
+    v2[1] = 0.2;
+    v3[0] = -0.3;
+    v3[1] = 0.05;
+    v4[0] = 0;
+    v4[1] = 0.05;
+    colVector[0] = 0.1;
+    colVector[1] = 0.1;
+    colVector[2] = 0.9;
+    shapes[currShape++] = new Rectangle(v1, v2, v3, v4, colVector);
+
 }
