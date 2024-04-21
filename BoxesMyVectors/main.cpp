@@ -77,7 +77,7 @@ int main()
     }
 
     // Here we set the background color to a shade of gray.
-    glClearColor(0.2, 0.2, 0.2, 0.2);
+    glClearColor(0.8, 0.8, 0.95, 0.2);
 
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_NEAREST);
@@ -292,7 +292,7 @@ int main()
         // delete[] colors;
 
         lastTime = currentTime;
-        cout << "FPS: " << 1 / deltaTime << endl;
+        //cout << "FPS: " << 1 / deltaTime << endl;
 
     } while (glfwGetKey(window, GLFW_KEY_SPACE) != GLFW_PRESS &&
              glfwWindowShouldClose(window) == 0);

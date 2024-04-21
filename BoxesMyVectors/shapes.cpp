@@ -186,27 +186,22 @@ Box::Box(Vector center, double height, double width, double length, Vector color
     arr[0] = 0; arr[1] = height / 2; arr[2] = 0;
     Vector topPlane = center + Vector(3, arr);
 
-    //vec3 bottomPlane = center - vec3(0, height / 2, 0);
     arr = new double[3];
     arr[0] = 0; arr[1] = height / 2; arr[2] = 0;
-    Vector bottomPlane = center + Vector(3, arr);
+    Vector bottomPlane = center - Vector(3, arr);
 
-    //vec3 leftPlane = center - vec3(width / 2, 0, 0);
     arr = new double[3];
     arr[0] = width / 2; arr[1] = 0; arr[2] = 0;
-    Vector leftPlane = center + Vector(3, arr);
+    Vector leftPlane = center - Vector(3, arr);
 
-    //vec3 rightPlane = center + vec3(width / 2, 0, 0);
     arr = new double[3];
     arr[0] = width / 2; arr[1] =0; arr[2] = 0;
     Vector rightPlane = center + Vector(3, arr);
 
-    //vec3 nearPlane = center - vec3(0, 0, length / 2);
     arr = new double[3];
     arr[0] = 0; arr[1] = 0; arr[2] = length / 2;
-    Vector nearPlane = center + Vector(3, arr);
+    Vector nearPlane = center - Vector(3, arr);
 
-    //vec3 farPlane = center + vec3(0, 0, length / 2);
     arr = new double[3];
     arr[0] = 0; arr[1] = 0; arr[2] = length / 2;
     Vector farPlane = center + Vector(3, arr);
