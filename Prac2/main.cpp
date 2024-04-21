@@ -142,6 +142,7 @@ int main()
             (void *)0
         );
         glDrawArrays(GL_TRIANGLES, 0, shp->numVertices());
+        //glDrawArrays(GL_LINE, 0, shp->numVertices());
 
         glDisableVertexAttribArray(0);
         glDisableVertexAttribArray(1);
