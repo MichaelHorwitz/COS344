@@ -74,7 +74,7 @@ GLfloat *Shape::toColorArray()
     return result;
 }
 
-void Shape::applyMatrix(mat4x4 m)
+void Shape::applyMatrix(Matrix m)
 {
     if (numShapes > 0)
     {
@@ -87,7 +87,15 @@ void Shape::applyMatrix(mat4x4 m)
     {
         for (int i = 0; i < numPoints(); i++)
         {
-            (*vertices[i]) = m * vec4((*vertices[i]), 1);
+            //(*vertices[i]) = m * vec4((*vertices[i]), 1);
+            Matrix tempVector = Matrix(4, 1);
+            for (size_t j = 0; j < 3; j++)
+            {
+                Vector * currVector = vertices[i];
+                tempVector[i][0] = currVector->operator[](j);
+            }
+            tempVector[3][0] = 1;
+            vertices[i] = (m * tempVector).toVector();
         }
     }
 }
@@ -112,18 +120,18 @@ int Shape::numColors()
     return count;
 }
 
-Triangle::Triangle(vec3 point1, vec3 point2, vec3 point3, vec3 color)
+Triangle::Triangle(Vector point1, Vector point2, Vector point3, Vector color)
 {
     numShapes = 0;
     shapes = new Shape *[0];
 
     int n = numPoints();
-    vertices = new vec3 *[n];
-    vertices[0] = new vec3(point1);
-    vertices[1] = new vec3(point2);
-    vertices[2] = new vec3(point3);
+    vertices = new Vector *[n];
+    vertices[0] = new Vector(point1);
+    vertices[1] = new Vector(point2);
+    vertices[2] = new Vector(point3);
 
-    colors = new vec3[n];
+    colors = new Vector[n];
     for (int i = 0; i < 3; i++)
     {
         colors[i] = color;
@@ -145,14 +153,14 @@ int Triangle::numPoints()
     return 3;
 }
 
-Rectangle::Rectangle(vec3 ul, vec3 ur, vec3 ll, vec3 lr, vec3 color)
+Rectangle::Rectangle(Vector ul, Vector ur, Vector ll, Vector lr, Vector color)
 {
     numShapes = 2;
     shapes = new Shape *[numShapes];
     shapes[0] = new Triangle(ur, ul, ll, color);
     shapes[1] = new Triangle(ll, lr, ur, color);
     int n = numPoints();
-    vertices = new vec3 *[n];
+    vertices = new Vector *[n];
     int count = 0;
     for (int i = 0; i < numShapes; i++)
     {
@@ -162,7 +170,7 @@ Rectangle::Rectangle(vec3 ul, vec3 ur, vec3 ll, vec3 lr, vec3 color)
         }
     }
 
-    colors = new vec3[n];
+    colors = new Vector[n];
 
     for (int i = 0; i < n; i++)
     {
@@ -170,45 +178,48 @@ Rectangle::Rectangle(vec3 ul, vec3 ur, vec3 ll, vec3 lr, vec3 color)
     }
 }
 
-House::House()
+
+Box::Box(Vector center, double height, double width, double length, Vector color)
 {
-    numShapes = 3;
-    shapes = new Shape *[numShapes];
-    shapes[0] = new Triangle(
-        vec3(0, 0.4, 0),
-        vec3(-0.2, 0.2, 0),
-        vec3(0.2, 0.2, 0));
-    shapes[1] = new Rectangle(
-        vec3(-0.2, 0.2, 0),
-        vec3(0.2, 0.2, 0),
-        vec3(-0.2, -0.2, 0),
-        vec3(0.2, -0.2, 0));
-    shapes[2] = new Rectangle(
-        vec3(-0.05, 0, 0),
-        vec3(0.05, 0, 0),
-        vec3(-0.05, -0.2, 0),
-        vec3(0.05, -0.2, 0),
-        vec3(0, 0, 1));
-}
 
-Box::Box(vec3 center, double height, double width, double length, vec3 color)
-{
-    vec3 topPlane = center + vec3(0, height / 2, 0);
-    vec3 bottomPlane = center - vec3(0, height / 2, 0);
-    vec3 leftPlane = center - vec3(width / 2, 0, 0);
-    vec3 rightPlane = center + vec3(width / 2, 0, 0);
-    vec3 nearPlane = center - vec3(0, 0, length / 2);
-    vec3 farPlane = center + vec3(0, 0, length / 2);
+    double* arr = new double[3];
+    arr[0] = 0; arr[1] = height / 2; arr[2] = 0;
+    Vector topPlane = center + Vector(3, arr);
 
-    vec3 nearLeftTop = nearPlane + leftPlane + topPlane;
-    vec3 nearRightTop = nearPlane + rightPlane + topPlane;
-    vec3 nearLeftBottom = nearPlane + leftPlane + bottomPlane;
-    vec3 nearRightBottom = nearPlane + rightPlane + bottomPlane;
+    //vec3 bottomPlane = center - vec3(0, height / 2, 0);
+    arr = new double[3];
+    arr[0] = 0; arr[1] = height / 2; arr[2] = 0;
+    Vector bottomPlane = center + Vector(3, arr);
 
-    vec3 farLeftTop = farPlane + leftPlane + topPlane;
-    vec3 farRightTop = farPlane + rightPlane + topPlane;
-    vec3 farLeftBottom = farPlane + leftPlane + bottomPlane;
-    vec3 farRightBottom = farPlane + rightPlane + bottomPlane;
+    //vec3 leftPlane = center - vec3(width / 2, 0, 0);
+    arr = new double[3];
+    arr[0] = width / 2; arr[1] = 0; arr[2] = 0;
+    Vector leftPlane = center + Vector(3, arr);
+
+    //vec3 rightPlane = center + vec3(width / 2, 0, 0);
+    arr = new double[3];
+    arr[0] = width / 2; arr[1] =0; arr[2] = 0;
+    Vector rightPlane = center + Vector(3, arr);
+
+    //vec3 nearPlane = center - vec3(0, 0, length / 2);
+    arr = new double[3];
+    arr[0] = 0; arr[1] = 0; arr[2] = length / 2;
+    Vector nearPlane = center + Vector(3, arr);
+
+    //vec3 farPlane = center + vec3(0, 0, length / 2);
+    arr = new double[3];
+    arr[0] = 0; arr[1] = 0; arr[2] = length / 2;
+    Vector farPlane = center + Vector(3, arr);
+
+    Vector nearLeftTop = nearPlane + leftPlane + topPlane;
+    Vector nearRightTop = nearPlane + rightPlane + topPlane;
+    Vector nearLeftBottom = nearPlane + leftPlane + bottomPlane;
+    Vector nearRightBottom = nearPlane + rightPlane + bottomPlane;
+
+    Vector farLeftTop = farPlane + leftPlane + topPlane;
+    Vector farRightTop = farPlane + rightPlane + topPlane;
+    Vector farLeftBottom = farPlane + leftPlane + bottomPlane;
+    Vector farRightBottom = farPlane + rightPlane + bottomPlane;
 
     Rectangle *front = new Rectangle(nearLeftTop, nearRightTop, nearLeftBottom, nearRightBottom, color*0.1f);
     Rectangle *back = new Rectangle(farRightTop, farLeftTop, farRightBottom, farLeftBottom, color*0.2f);
@@ -224,7 +235,7 @@ Box::Box(vec3 center, double height, double width, double length, vec3 color)
     };
 }
 
-Boxes::Boxes(int numBoxes, vec3 *centers, double *heights, double *widths, double *lengths, vec3 *colors)
+Boxes::Boxes(int numBoxes, Vector *centers, double *heights, double *widths, double *lengths, Vector *colors)
 {
     numShapes = numBoxes;
     shapes = new Shape*[numShapes];

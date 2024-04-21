@@ -5,21 +5,21 @@
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
-#include <glm/glm.hpp>
 
-using namespace glm;
+#include "Matrix.h"
+
 using namespace std;
 
 
 struct Shape{
-    vec3** vertices;
-    vec3* colors;
+    Vector** vertices;
+    Vector* colors;
     Shape** shapes;
     int numShapes;
 
     ~Shape();
 
-    virtual void applyMatrix(mat4x4);
+    virtual void applyMatrix(Matrix);
     virtual GLfloat* toVertexArray();
     virtual GLfloat* toColorArray();
     virtual int numPoints();
@@ -29,26 +29,22 @@ struct Shape{
 };
 
 struct Triangle: public Shape{
-    Triangle(vec3, vec3, vec3, vec3 = vec3(1.0f, 0.0f, 0.0f));
+    Triangle(Vector, Vector, Vector, Vector);
     int numVertices();
     int numColors();
     int numPoints();
 };
 
 struct Rectangle: public Shape{
-    Rectangle(vec3, vec3, vec3, vec3, vec3 = vec3(0.0f, 1.0f, 0.0f));
+    Rectangle(Vector, Vector, Vector, Vector, Vector);
 };
 
 struct Box: public Shape{
-    Box(vec3 center, double height, double width, double length, vec3 = vec3(1.0f, 0.2f, 0.2f));
+    Box(Vector center, double height, double width, double length, Vector);
 };
 
 struct Boxes: public Shape{
-    Boxes(int numBoxes, vec3* centers, double* heights, double* widths, double* lengths, vec3* colors);
-};
-
-struct House: public Shape{
-    House();
+    Boxes(int numBoxes, Vector* centers, double* heights, double* widths, double* lengths, Vector* colors);
 };
 
 #endif /*SHAPES_H*/
