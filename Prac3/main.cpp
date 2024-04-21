@@ -10,7 +10,7 @@
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
 
-#include "shader.hpp"
+#include "Shader.hpp"
 
 using namespace glm;
 using namespace std;
