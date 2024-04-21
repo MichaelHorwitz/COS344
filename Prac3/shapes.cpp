@@ -34,10 +34,11 @@ GLfloat *Shape::toVertexArray()
     else
     {
         int count = 0;
-        for (int i = 0; i < numVertices() / 2; i++)
+        for (int i = 0; i < numVertices() / 3; i++)
         {
             result[count++] = (*vertices[i])[0];
             result[count++] = (*vertices[i])[1];
+            result[count++] = (*vertices[i])[2];
         }
     }
 
@@ -45,8 +46,9 @@ GLfloat *Shape::toVertexArray()
 }
 
 GLfloat *Shape::toColorArray()
-{
-    GLfloat *result = new GLfloat[numColors()];
+{   
+    int numberOfColors = numColors();
+    GLfloat *result = new GLfloat[numberOfColors];
     if (numShapes > 0)
     {
         int count = 0;
@@ -84,14 +86,13 @@ void Shape::applyMatrix(Matrix m)
     }
     else
     {
-
         for (int i = 0; i < numPoints(); i++)
         {
-            Matrix tempVector = Matrix(3,1);
+            Matrix tempVector = Matrix(4,1);
             for (int j = 0; j < 2; ++j) {
                 tempVector[j][0] = vertices[i]->operator[](j);
             }
-            tempVector[2][0] = 1;
+            tempVector[3][0] = 1;
             Matrix tempMatrix = (m * tempVector);
             vertices[i] = tempMatrix.toVector();
 
@@ -331,4 +332,63 @@ Car::Car()
     colVector[2] = 0.4;
     shapes[currShape++] = new Circle(8, 0.1, 0.3, -0.5, colVector);
 
+}
+
+Box::Box(Vector center, double height, double width, double length, Vector color){
+    double* arr;
+    
+    arr = new double[3];
+    arr[0] = 0; arr[1] = height / 2; arr[2] = 0;
+    Vector topPlane = center + Vector(3, arr);
+    
+    arr = new double[3];
+    arr[0] = 0; arr[1] = height / 2; arr[2] = 0;
+    Vector bottomPlane = center - Vector(3, arr);
+    
+    arr = new double [3];
+    arr[0] = width / 2; arr[1] = arr[2] = 0;
+    Vector leftPlane = center - Vector(3, arr);
+
+    arr = new double [3];
+    arr[0] = width / 2; arr[1] = arr[2] = 0;
+    Vector rightPlane = center + Vector(3, arr);
+
+    arr = new double [3];
+    arr[0] = arr[1] = 0; arr[2] = length / 2;
+    Vector nearPlane = center - Vector(3, arr);
+
+    arr = new double [3];
+    arr[0] = arr[1] = 0; arr[2] = length / 2;
+    Vector farPlane = center + Vector(3, arr);
+
+    Vector nearLeftTop = nearPlane + leftPlane + topPlane;
+    Vector nearRightTop = nearPlane + rightPlane + topPlane;
+    Vector nearLeftBottom = nearPlane + leftPlane + bottomPlane;
+    Vector nearRightBottom = nearPlane + rightPlane + bottomPlane;
+
+    Vector farLeftTop = farPlane + leftPlane + topPlane;
+    Vector farRightTop = farPlane + rightPlane + topPlane;
+    Vector farLeftBottom = farPlane + leftPlane + bottomPlane;
+    Vector farRightBottom = farPlane + rightPlane + bottomPlane;
+
+    Rectangle *front = new Rectangle(nearLeftTop, nearRightTop, nearLeftBottom, nearRightBottom, color*0.1f);
+    Rectangle *back = new Rectangle(farRightTop, farLeftTop, farRightBottom, farLeftBottom, color*0.2f);
+    Rectangle *left = new Rectangle(farLeftTop, nearLeftTop, farLeftBottom, nearLeftBottom, color*0.3f);
+    Rectangle *right = new Rectangle(nearRightTop, farRightTop, nearRightBottom, farRightBottom, color*0.4f);
+    Rectangle *bottom = new Rectangle(nearLeftBottom, nearRightBottom, farLeftBottom, farRightBottom, color*0.5f);
+    Rectangle *top = new Rectangle(nearLeftTop, nearRightTop, farLeftTop, farRightTop, color*0.6f);
+
+    numShapes = 6;
+    shapes = new Shape *[numShapes]
+    {
+        front, back, left, right, bottom, top
+    };
+    
+}
+Boxes::Boxes(int numBoxes, Vector* centers, double* heights, double* widths, double* lengths, Vector* colors){
+    numShapes = numBoxes;
+    shapes = new Shape*[numShapes];
+    for(int i=0; i < numShapes; i++){
+        shapes[i] = new Box(centers[i],heights[i], widths[i], lengths[i], colors[i]);
+    }
 }

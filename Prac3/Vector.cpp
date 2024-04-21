@@ -1,4 +1,13 @@
 #include "Vector.h"
+Vector::Vector(){
+    int n = 0;
+    arr = new double[n];
+    this->n = n;
+    for (int i = 0; i < n; i++)
+    {
+        arr[i] = 0.0;
+    }
+}
 
 Vector::Vector(int n)
 {

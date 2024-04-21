@@ -42,6 +42,14 @@ struct Rectangle: public Shape{
     Rectangle(Vector, Vector, Vector, Vector, Vector);
 };
 
+struct Box: public Shape{
+    Box(Vector center, double height, double width, double length, Vector);
+};
+
+struct Boxes: public Shape{
+    Boxes(int numBoxes, Vector* centers, double* heights, double* widths, double* lengths, Vector* colors);
+};
+
 struct Circle: public Shape{
     int numVertices;
     double length;

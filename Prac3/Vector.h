@@ -13,6 +13,7 @@ private:
     double *arr; // array containing the elements in the vector
 
 public:
+    Vector();
     Vector(int);
     Vector(int, double *);
     ~Vector();

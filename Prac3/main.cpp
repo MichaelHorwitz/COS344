@@ -79,7 +79,10 @@ int main()
         throw;
     }
 
-    glClearColor(0.05, 0.05, 0.2, 0.2);
+    glClearColor(0.1, 0.1, 0.2, 0.2);
+
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_NEAREST);
 
     GLuint VertexArrayID;
     glGenVertexArrays(1, &VertexArrayID);
@@ -88,24 +91,48 @@ int main()
     glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
 
     GLuint programID = LoadShaders("vertexShader.glsl", "fragmentShader.glsl");
-    timeDT lastChanged = chrono::steady_clock::now();
 
     GLuint vertexbuffer;
     glGenBuffers(1, &vertexbuffer);
     GLuint colorbuffer;
     glGenBuffers(1, &colorbuffer);
 
-    double lastTime;
-    lastTime = glfwGetTime();
-    Shape* shp = new Car();
-    bool firstRun = true;
-    bool firstW = true;
+    Vector *centers = new Vector[2];
 
+    double * arr = new double[3];
+    arr[0] = arr[1] = arr[2] = 0;
+    centers[0] = Vector(3, arr);
+    
+    arr = new double[3];
+    arr[0] = arr[1] = arr[2] = -0.1;
+    centers[1] = Vector(3, arr);
+
+    double heights[2] = {
+        0.2,
+        0.2,
+    };
+    double widths[2] = {
+        0.2,
+        0.2,
+    };
+    double lengths[2] = {
+        0.2,
+        0.2,
+    };
+
+    Vector* colors = new Vector[2];
+    arr = new double[3];
+    arr[0] = arr[1] = 0; arr[2] = 1;
+    colors[0] = Vector(3, arr);
+    arr = new double[3];
+    arr[0] = 1; arr[1] = arr[2] = 0;
+    colors[1] = Vector(3, arr);
+
+    Shape *shp = new Boxes(2, centers, heights, widths, lengths, colors);
+    shp->toColorArray();
+    bool firstRun = true;
     do
     {
-        float currentTime = glfwGetTime();
-        float deltaTime = currentTime - lastTime;
-
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glUseProgram(programID);
 
@@ -124,7 +151,7 @@ int main()
         glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
         glVertexAttribPointer(
             0,
-            2,
+            3,
             GL_FLOAT,
             GL_FALSE,
             0,
@@ -142,7 +169,6 @@ int main()
             (void *)0
         );
         glDrawArrays(GL_TRIANGLES, 0, shp->numVertices());
-        //glDrawArrays(GL_LINE, 0, shp->numVertices());
 
         glDisableVertexAttribArray(0);
         glDisableVertexAttribArray(1);
@@ -150,51 +176,105 @@ int main()
         //Swap buffers
         glfwSwapBuffers(window);
         glfwPollEvents();
-        if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+        
+        if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
         {
-            Matrix translation = Matrix(3,3);
-            translation[0][0] = 1.005;
-            translation[1][1] = 1.005;
-            translation[2][2] = 1;
-            translation[1][2] = -0.01;
-            shp->applyMatrix(translation);
+            //mat4x4 rotationX = mat4x4(0.0f);
+            double** matArr = new double * [4];
+            for (size_t i = 0; i < 4; i++)
+            {
+                matArr[i] = new double[4];
+                for (size_t j = 0; j < 4; j++)
+                {
+                    matArr[i][j] = 0.0f;
+                }
+                
+            }
+            Matrix rotationX = Matrix(4, 4, matArr);
+            rotationX[0][0] = 1;
+            rotationX[1][1] = cos(0.02);
+            rotationX[1][2] = -sin(0.02);
+            rotationX[2][1] = sin(0.02);
+            rotationX[2][2] = cos(0.02);
+            rotationX[3][3] = 1;
+
+            //mat4x4 rotationY = mat4x4(0.0f);
+            matArr = new double * [4];
+            for (size_t i = 0; i < 4; i++)
+            {
+                matArr[i] = new double[4];
+                for (size_t j = 0; j < 4; j++)
+                {
+                    matArr[i][j] = 0.0f;
+                }
+                
+            }
+            Matrix rotationY = Matrix(4, 4, matArr);
+
+            rotationY[0][0] = cos(0.04);
+            rotationY[0][2] = -sin(0.04);
+            rotationY[1][1] = 1;
+            rotationY[2][0] = sin(0.04);
+            rotationY[2][2] = cos(0.04);
+            rotationY[3][3] = 1;
+
+            Matrix rot = rotationX * rotationY;
+
+            shp->applyMatrix(rot);
         }
-        if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+        if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
         {
-            Matrix translation = Matrix(3,3);
-            translation[0][0] = 0.995;
-            translation[1][1] = 0.995;
-            translation[2][2] = 1;
-            translation[1][2] = 0.01;
-            shp->applyMatrix(translation);
-        }
-        if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-        {
-            Matrix translation = Matrix(3,3);
-            translation[0][0] = 1;
-            translation[0][2] = 0.01;
-            translation[1][1] = 1;
-            translation[2][2] = 1;
-            shp->applyMatrix(translation);
-        }
-        if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-        {
-            Matrix translation = Matrix(3,3);
-            translation[0][0] = 1;
-            translation[0][2] = -0.01;
-            translation[1][1] = 1;
-            translation[2][2] = 1;
-            shp->applyMatrix(translation);
+            //mat4x4 rotationX = mat4x4(0.0f);
+            double** matArr = new double * [4];
+            for (size_t i = 0; i < 4; i++)
+            {
+                matArr[i] = new double[4];
+                for (size_t j = 0; j < 4; j++)
+                {
+                    matArr[i][j] = 0.0f;
+                }
+                
+            }
+            Matrix rotationX = Matrix(4, 4, matArr);
+            rotationX[0][0] = 1;
+            rotationX[1][1] = cos(-0.02);
+            rotationX[1][2] = -sin(-0.02);
+            rotationX[2][1] = sin(-0.02);
+            rotationX[2][2] = cos(-0.02);
+            rotationX[3][3] = 1;
+
+            //mat4x4 rotationY = mat4x4(0.0f);
+            matArr = new double * [4];
+            for (size_t i = 0; i < 4; i++)
+            {
+                matArr[i] = new double[4];
+                for (size_t j = 0; j < 4; j++)
+                {
+                    matArr[i][j] = 0.0f;
+                }
+                
+            }
+            Matrix rotationY = Matrix(4, 4, matArr);
+
+            rotationY[0][0] = cos(-0.04);
+            rotationY[0][2] = -sin(-0.04);
+            rotationY[1][1] = 1;
+            rotationY[2][0] = sin(-0.04);
+            rotationY[2][2] = cos(-0.04);
+            rotationY[3][3] = 1;
+
+            Matrix rot = rotationX * rotationY;
+
+            shp->applyMatrix(rot);
         }
 
         delete[] vertices;
         delete[] colors;
-
-        lastTime = currentTime;
-        //cout << "FPS: " << 1 / deltaTime << endl;
         firstRun = false;
+        
     } while (glfwGetKey(window, GLFW_KEY_SPACE) != GLFW_PRESS &&
              glfwWindowShouldClose(window) == 0);
+             
 
-    delete shp;
+    //delete shp;
 }

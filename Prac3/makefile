@@ -7,8 +7,10 @@ main: main.cpp glad.c
 clean:
 	rm -f *.o main
 
-run: main
+run: main $(files)
 	./main
+debug: main
+	gdb ./main
 
 all:
 	make clean
