@@ -34,7 +34,7 @@ GLfloat *Shape::toVertexArray()
     else
     {
         int count = 0;
-        for (int i = 0; i < numVertices() / 3; i++)
+        for (int i = 0; i < numPoints(); i++)
         {
             result[count++] = (*vertices[i])[0];
             result[count++] = (*vertices[i])[1];
