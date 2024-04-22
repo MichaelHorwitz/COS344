@@ -1,0 +1,3 @@
+/home/michael/Documents/GitHub/COS344/NewMathLibrary/cmake-build-debug/CMakeFiles/NewMathLibrary.dir
+/home/michael/Documents/GitHub/COS344/NewMathLibrary/cmake-build-debug/CMakeFiles/edit_cache.dir
+/home/michael/Documents/GitHub/COS344/NewMathLibrary/cmake-build-debug/CMakeFiles/rebuild_cache.dir

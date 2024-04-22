@@ -145,3 +145,19 @@ Matrix Vector::toMatrix() {
 }
 
 
+Vector3::Vector3() {
+    Vector(3);
+}
+
+Vector3::Vector3(double num1, double num2, double num3) {
+    this->n = 3;
+    arr = new double[3];
+    arr[0] = num1;
+    arr[1] = num2;
+    arr[2] = num3;
+}
+
+Vector3::Vector3(double * arr) {
+    this->n = 3;
+    this->arr = arr;
+}

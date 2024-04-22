@@ -1,5 +1,4 @@
-#ifndef VECTOR_H
-#define VECTOR_H
+#pragma once
 
 #include "Matrix.h"
 #include "MathExceptions.h"
@@ -8,7 +7,7 @@ class Matrix;
 
 class Vector
 {
-private:
+protected:
     int n;       // size of the vector
     double *arr; // array containing the elements in the vector
 
@@ -45,4 +44,9 @@ public:
     Matrix toMatrix();
 };
 
-#endif /*VECTOR_H*/
+class Vector3 : public Vector {
+public:
+    Vector3();
+    Vector3(double, double, double);
+    Vector3(double *);
+};

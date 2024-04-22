@@ -1,6 +1,4 @@
-#ifndef MATRIX_H
-#define MATRIX_H
-
+#pragma once
 #include <iostream>
 #include <cmath>
 #include <iomanip>
@@ -18,6 +16,7 @@ protected:
     double **arr;
 
 public:
+    Matrix();
     Matrix(int, int);
     Matrix(int, int, double **);
     Matrix(const Matrix &);
@@ -25,9 +24,8 @@ public:
     double *&operator[](int index) const
     {
         if (index >= n || index < 0)
-        {
             throw MathExceptions::InvalidIndex;
-        }
+
 
         return arr[index];
     }
@@ -54,20 +52,25 @@ public:
 class SquareMatrix : public Matrix
 {
 public:
-    SquareMatrix(int);
+    SquareMatrix();
+    explicit SquareMatrix(int);
     SquareMatrix(int, double **);
     //void upperTriangular(Vector&) const;
-    virtual ~SquareMatrix();
+    ~SquareMatrix() override;
     Vector solve(const Vector) const;
     double determinant() const;
     SquareMatrix operator!() const;
 };
 
+class Matrix4x4 : public SquareMatrix{
+public:
+    Matrix4x4();
+    explicit Matrix4x4(double);
+};
+
 class IdentityMatrix : public SquareMatrix
 {
 public:
-    IdentityMatrix(int);
-    virtual ~IdentityMatrix();
+    explicit IdentityMatrix(int);
+    ~IdentityMatrix() override;
 };
-
-#endif /*MATRIX_H*/

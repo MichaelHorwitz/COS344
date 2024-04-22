@@ -8,11 +8,14 @@
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
+#include <glm/glm.hpp>
 
 #include "shader.hpp"
 #include "shapes.h"
 
 #define timeDT std::chrono::_V2::steady_clock::time_point
+
+using namespace glm;
 using namespace std;
 
 const char *getError()
@@ -77,7 +80,7 @@ int main()
     }
 
     // Here we set the background color to a shade of gray.
-    glClearColor(0.8, 0.8, 0.95, 0.2);
+    glClearColor(0.2, 0.2, 0.2, 0.2);
 
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_NEAREST);
@@ -105,20 +108,9 @@ int main()
     lastTime = glfwGetTime();
 
     // Here we create a the boxes object which consists of two boxes
-    // vec3 centers[2] = {
-    //     vec3(0, 0, 0),
-    //     vec3(-0.1, -0.1, -0.1)};
-    
-    Vector *centers = new Vector[2];
-    
-    double * arr = new double[3];
-    arr[0] = arr[1] = arr[2] = 0;
-    centers[0] = Vector(3, arr);
-    
-    arr = new double[3];
-    arr[0] = arr[1] = arr[2] = -0.1;
-    centers[1] = Vector(3, arr);
-
+    vec3 centers[2] = {
+        vec3(0, 0, 0),
+        vec3(-0.1, -0.1, -0.1)};
     double heights[2] = {
         0.2,
         0.2,
@@ -131,17 +123,9 @@ int main()
         0.2,
         0.2,
     };
-    // vec3 colors[2] = {
-    //     vec3(0, 0, 1),
-    //     vec3(1, 0, 0)};
-    Vector* colors = new Vector[2];
-    
-    arr = new double[3];
-    arr[0] = arr[1] = 0; arr[2] = 1;
-    colors[0] = Vector(3, arr);
-    arr = new double[3];
-    arr[0] = 1; arr[1] = arr[2] = 0;
-    colors[1] = Vector(3, arr);
+    vec3 colors[2] = {
+        vec3(0, 0, 1),
+        vec3(1, 0, 0)};
 
     Shape *shp = new Boxes(2, centers, heights, widths, lengths, colors);
 
@@ -200,102 +184,67 @@ int main()
         // Reminder: The examples use GLM but for the practicals you may not use GLM and all the matrix calculations needs to be done in the application not the shaders.
         if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
         {
-            //mat4x4 rotationX = mat4x4(0.0f);
-            double** matArr = new double * [4];
-            for (size_t i = 0; i < 4; i++)
-            {
-                matArr[i] = new double[4];
-                for (size_t j = 0; j < 4; j++)
-                {
-                    matArr[i][j] = 0.0f;
-                }
-                
-            }
-            Matrix rotationX = Matrix(4, 4, matArr);
-            rotationX[0][0] = 1;
-            rotationX[1][1] = cos(0.002);
-            rotationX[1][2] = -sin(0.002);
-            rotationX[2][1] = sin(0.002);
-            rotationX[2][2] = cos(0.002);
-            rotationX[3][3] = 1;
+            mat4x4 rotationX = mat4x4(0.0f);
 
-            //mat4x4 rotationY = mat4x4(0.0f);
-            matArr = new double * [4];
-            for (size_t i = 0; i < 4; i++)
-            {
-                matArr[i] = new double[4];
-                for (size_t j = 0; j < 4; j++)
-                {
-                    matArr[i][j] = 0.0f;
-                }
-                
-            }
-            Matrix rotationY = Matrix(4, 4, matArr);
+            rotationX[0].x = 1;
+            rotationX[1].y = cos(0.02);
+            rotationX[1].z = -sin(0.02);
+            rotationX[2].y = sin(0.02);
+            rotationX[2].z = cos(0.02);
+            rotationX[3].w = 1;
 
-            rotationY[0][0] = cos(0.004);
-            rotationY[0][2] = -sin(0.004);
-            rotationY[1][1] = 1;
-            rotationY[2][0] = sin(0.004);
-            rotationY[2][2] = cos(0.004);
-            rotationY[3][3] = 1;
+            mat4x4 rotationY = mat4x4(0.0f);
 
-            Matrix rot = rotationX * rotationY;
+            rotationY[0].x = cos(0.04);
+            rotationY[0].z = -sin(0.04);
+            rotationY[1].y = 1;
+            rotationY[2].x = sin(0.04);
+            rotationY[2].z = cos(0.04);
+            rotationY[3].w = 1;
 
-            shp->applyMatrix(rot);
+            mat4x4 rot = rotationX * rotationY;
+
+            shp->applyMatrix(transpose(rot));
+
+            // Debugging
+            cout << "Applied rotation matrix for key E" << endl;
         }
         if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
         {
-            //mat4x4 rotationX = mat4x4(0.0f);
-            double** matArr = new double * [4];
-            for (size_t i = 0; i < 4; i++)
-            {
-                matArr[i] = new double[4];
-                for (size_t j = 0; j < 4; j++)
-                {
-                    matArr[i][j] = 0.0f;
-                }
-                
-            }
-            Matrix rotationX = Matrix(4, 4, matArr);
-            rotationX[0][0] = 1;
-            rotationX[1][1] = cos(-0.02);
-            rotationX[1][2] = -sin(-0.02);
-            rotationX[2][1] = sin(-0.02);
-            rotationX[2][2] = cos(-0.02);
-            rotationX[3][3] = 1;
+            mat4x4 rotationX = mat4x4(0.0f);
 
-            //mat4x4 rotationY = mat4x4(0.0f);
-            matArr = new double * [4];
-            for (size_t i = 0; i < 4; i++)
-            {
-                matArr[i] = new double[4];
-                for (size_t j = 0; j < 4; j++)
-                {
-                    matArr[i][j] = 0.0f;
-                }
-                
-            }
-            Matrix rotationY = Matrix(4, 4, matArr);
+            rotationX[0].x = 1;
+            rotationX[1].y = cos(-0.02);
+            rotationX[1].z = -sin(-0.02);
+            rotationX[2].y = sin(-0.02);
+            rotationX[2].z = cos(-0.02);
+            rotationX[3].w = 1;
 
-            rotationY[0][0] = cos(-0.04);
-            rotationY[0][2] = -sin(-0.04);
-            rotationY[1][1] = 1;
-            rotationY[2][0] = sin(-0.04);
-            rotationY[2][2] = cos(-0.04);
-            rotationY[3][3] = 1;
+            mat4x4 rotationY = mat4x4(0.0f);
 
-            Matrix rot = rotationX * rotationY;
+            rotationY[0].x = cos(0.04);
+            rotationY[0].z = -sin(0.04);
+            rotationY[1].y = 1;
+            rotationY[2].x = sin(0.04);
+            rotationY[2].z = cos(0.04);
+            rotationY[3].w = 1;
 
-            shp->applyMatrix(rot);
+            mat4x4 rot = rotationX * rotationY;
+
+            shp->applyMatrix(transpose(rot));
+
+            // Debugging
+            cout << "Applied rotation matrix for key Q" << endl;
         }
+
         // delete[] vertices;
         // delete[] colors;
 
         lastTime = currentTime;
-        //cout << "FPS: " << 1 / deltaTime << endl;
+        cout << "FPS: " << 1 / deltaTime << endl;
 
     } while (glfwGetKey(window, GLFW_KEY_SPACE) != GLFW_PRESS &&
              glfwWindowShouldClose(window) == 0);
 
-    //delete shp;
+    delete shp;
 }
