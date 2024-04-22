@@ -245,6 +245,10 @@ Vector SquareMatrix::solve(const Vector inVector) const {
     return solutionVector;
 }
 
+SquareMatrix::SquareMatrix() {
+    this->n = 0;
+    this->arr = new double * [0];
+}
 
 
 IdentityMatrix::IdentityMatrix(int n) : SquareMatrix(n){
@@ -264,4 +268,33 @@ Vector* Matrix::toVector() {
     }
     Vector * newVector = new Vector(this->n, arr);
     return newVector;
+}
+
+Matrix::Matrix() {
+    this->n = 0;
+    this->m = 0;
+    this->arr = new double * [0];
+
+}
+
+Matrix4x4::Matrix4x4() {
+    this->n = this->m = 4;
+    this->arr = new double * [4];
+    for (int i = 0; i < 4; ++i) {
+        arr[i] = new double[4];
+        for (int j = 0; j < 4; ++j) {
+            arr[i][j] = 0;
+        }
+    }
+}
+
+Matrix4x4::Matrix4x4(double fill) {
+    this->n = this->m = 4;
+    this->arr = new double * [4];
+    for (int i = 0; i < 4; ++i) {
+        this->arr[i] = new double[4];
+        for (int j = 0; j < 4; ++j) {
+            this->arr[i][j] = fill;
+        }
+    }
 }
