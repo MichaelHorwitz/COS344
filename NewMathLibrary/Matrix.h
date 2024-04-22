@@ -1,6 +1,4 @@
-#ifndef MATRIX_H
-#define MATRIX_H
-
+#pragma once
 #include <iostream>
 #include <cmath>
 #include <iomanip>
@@ -69,5 +67,3 @@ public:
     IdentityMatrix(int);
     virtual ~IdentityMatrix();
 };
-
-#endif /*MATRIX_H*/
