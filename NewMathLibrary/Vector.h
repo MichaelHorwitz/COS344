@@ -17,6 +17,8 @@ public:
     Vector(int, double *);
     ~Vector();
     Vector(const Vector &);
+    // add conversion from Vector to Vector3
+    operator Vector3() const;
     Vector operator+(const Vector) const;
     Vector operator-(const Vector) const;
     Vector operator*(const double) const;
@@ -49,4 +51,13 @@ public:
     Vector3();
     Vector3(double, double, double);
     Vector3(double *);
+    operator Matrix() const;
+    Vector3 operator= (Matrix) const;
+};
+class Vector4 : public Vector {
+public:
+    Vector4();
+    Vector4(double, double, double, double);
+    Vector4(double *);
+    Vector4(Vector3, double);
 };

@@ -46,6 +46,14 @@ Vector::Vector(const Vector& inVector)
     }
 }
 
+Vector::operator Vector3() const
+{
+    Vector3 newVector;
+    newVector.arr = arr;
+    newVector.n = n;
+    return newVector;
+}
+
 Vector Vector::operator+(const Vector w) const {
     if (this->n != w.n){
         throw MathExceptions::InvalidVectorAddition;
@@ -160,4 +168,60 @@ Vector3::Vector3(double num1, double num2, double num3) {
 Vector3::Vector3(double * arr) {
     this->n = 3;
     this->arr = arr;
+}
+
+Vector3::operator Matrix() const
+{
+    Matrix matrix(3, 1);
+    for (int i = 0; i < 3; i++)
+    {
+        matrix[i][0] = arr[i];
+    }
+    return matrix;
+}
+
+Vector3 Vector3::operator= (Matrix m) const
+{
+    Vector3 newVector;
+    newVector.arr = new double[4];
+    newVector.n = 4;
+    for (size_t i = 0; i < m.getN(); i++)
+    {
+        newVector.arr[i] = m[i][0];
+    }
+    return newVector;
+    
+}
+
+Vector4::Vector4()
+{
+    Vector(4);   
+}
+
+Vector4::Vector4(double num0, double num1, double num2, double num3)
+{
+    this->n = 4;
+    this->arr = new double[4];
+    this->arr[0] = num0;
+    this->arr[1] = num1;
+    this->arr[2] = num2;
+    this->arr[3] = num3;
+}
+
+Vector4::Vector4(double * arr)
+{
+    this->n = 4;
+    this->arr = arr;
+}
+
+Vector4::Vector4(Vector3 vector3, double num)
+{
+    //Create a vector4 from a vector3 and a double
+    this->n = 4;
+    this->arr = new double[4];
+    for (size_t i = 0; i < 3; i++)
+    {
+        this->arr[i] = vector3[i];
+    }
+    this->arr[4] = num;
 }

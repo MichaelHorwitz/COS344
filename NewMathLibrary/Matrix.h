@@ -46,6 +46,7 @@ public:
     }
     int getM() const;
     int getN() const;
+    double ** getArr(){return arr;};
     Vector* toVector();
 };
 
@@ -66,6 +67,7 @@ class Matrix4x4 : public SquareMatrix{
 public:
     Matrix4x4();
     explicit Matrix4x4(double);
+    static Matrix4x4 convertTo4x4(Matrix matrix);
 };
 
 class IdentityMatrix : public SquareMatrix

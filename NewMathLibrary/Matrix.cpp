@@ -298,3 +298,12 @@ Matrix4x4::Matrix4x4(double fill) {
         }
     }
 }
+
+Matrix4x4 Matrix4x4::convertTo4x4(Matrix matrix) {
+    Matrix4x4 ret = Matrix4x4();
+    ret.n = matrix.getN();
+    ret.m = matrix.getM();
+    ret.arr = matrix.getArr();
+    return ret;
+}
+
