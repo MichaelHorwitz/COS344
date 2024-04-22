@@ -205,6 +205,9 @@ int main()
             mat4x4 rot = rotationX * rotationY;
 
             shp->applyMatrix(transpose(rot));
+
+            // Debugging
+            cout << "Applied rotation matrix for key E" << endl;
         }
         if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
         {
@@ -229,6 +232,9 @@ int main()
             mat4x4 rot = rotationX * rotationY;
 
             shp->applyMatrix(transpose(rot));
+
+            // Debugging
+            cout << "Applied rotation matrix for key Q" << endl;
         }
 
         // delete[] vertices;
