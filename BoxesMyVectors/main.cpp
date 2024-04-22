@@ -213,10 +213,10 @@ int main()
             }
             Matrix rotationX = Matrix(4, 4, matArr);
             rotationX[0][0] = 1;
-            rotationX[1][1] = cos(0.02);
-            rotationX[1][2] = -sin(0.02);
-            rotationX[2][1] = sin(0.02);
-            rotationX[2][2] = cos(0.02);
+            rotationX[1][1] = cos(0.002);
+            rotationX[1][2] = -sin(0.002);
+            rotationX[2][1] = sin(0.002);
+            rotationX[2][2] = cos(0.002);
             rotationX[3][3] = 1;
 
             //mat4x4 rotationY = mat4x4(0.0f);
@@ -232,11 +232,11 @@ int main()
             }
             Matrix rotationY = Matrix(4, 4, matArr);
 
-            rotationY[0][0] = cos(0.04);
-            rotationY[0][2] = -sin(0.04);
+            rotationY[0][0] = cos(0.004);
+            rotationY[0][2] = -sin(0.004);
             rotationY[1][1] = 1;
-            rotationY[2][0] = sin(0.04);
-            rotationY[2][2] = cos(0.04);
+            rotationY[2][0] = sin(0.004);
+            rotationY[2][2] = cos(0.004);
             rotationY[3][3] = 1;
 
             Matrix rot = rotationX * rotationY;
