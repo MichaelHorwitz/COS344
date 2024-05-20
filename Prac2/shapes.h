@@ -7,8 +7,7 @@
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
 
-#include "NewMathLibrary/Matrix.h"
-#include "NewMathLibrary/Vector.h"
+#include "Matrix.h"
 #include "Vector.h"
 
 using namespace glm;
@@ -16,8 +15,8 @@ using namespace std;
 
 
 struct Shape{
-    Vector3** vertices;
-    Vector4** colors;
+    Vector** vertices;
+    Vector** colors;
     Shape** shapes;
     int numShapes;
 
@@ -33,7 +32,7 @@ struct Shape{
 };
 
 struct Triangle: public Shape{
-    Triangle(Vector3z, Vector3, Vector3, Vector4);
+    Triangle(Vector, Vector, Vector, Vector);
     int numVertices();
     int numColors();
     int numPoints();
@@ -43,5 +42,14 @@ struct Rectangle: public Shape{
     Rectangle(Vector, Vector, Vector, Vector, Vector);
 };
 
+struct Circle: public Shape{
+    int numVertices;
+    double length;
+    Circle(int, double, double, double, Vector);
+};
+
+struct Car: public Shape{
+    Car();
+};
 
 #endif /*SHAPES_H*/
