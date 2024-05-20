@@ -51,6 +51,7 @@ public:
     Vector3();
     Vector3(double, double, double);
     Vector3(double *);
+    //Vector3(Vector);
     operator Matrix() const;
     Vector3 operator= (Matrix) const;
 };

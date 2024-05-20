@@ -5,13 +5,10 @@
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
-#include <glm/glm.hpp>
 
 #include "NewMathLibrary/Matrix.h"
 #include "NewMathLibrary/Vector.h"
-#include "Vector.h"
 
-using namespace glm;
 using namespace std;
 
 
@@ -22,7 +19,7 @@ struct Shape{
     int numShapes;
 
     ~Shape();
-
+    Shape();
     virtual void applyMatrix(Matrix);
     virtual GLfloat* toVertexArray();
     virtual GLfloat* toColorArray();
@@ -30,18 +27,26 @@ struct Shape{
 
     virtual int numVertices();
     virtual int numColors();
+
+    virtual Shape* addShape(Shape*);
+    virtual void changeColor(Vector4);
 };
 
 struct Triangle: public Shape{
-    Triangle(Vector3z, Vector3, Vector3, Vector4);
+    Triangle(Vector3, Vector3, Vector3, Vector4);
     int numVertices();
     int numColors();
     int numPoints();
 };
 
 struct Rectangle: public Shape{
-    Rectangle(Vector, Vector, Vector, Vector, Vector);
+    Rectangle(Vector3, Vector3, Vector3, Vector3, Vector4);
 };
-
-
+struct BackSheet: public Shape{
+    BackSheet(Vector3, Vector3, Vector3, Vector3, Vector4, Vector4, int);
+    BackSheet(Vector3, Vector3, Vector3, Vector3, Vector4, int);
+};
+struct Cuboid: public Shape{
+    Cuboid(Vector3, Vector3, Vector3, Vector3, float, Vector4);
+};
 #endif /*SHAPES_H*/
