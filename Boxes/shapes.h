@@ -6,21 +6,20 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
-#include "NewMathLibrary/Vector.h"
 
 using namespace glm;
 using namespace std;
 
 
 struct Shape{
-    Vector3** vertices;
-    Vector3* colors;
+    vec3** vertices;
+    vec3* colors;
     Shape** shapes;
     int numShapes;
 
     ~Shape();
 
-    virtual void applyMatrix(Matrix4x4);
+    virtual void applyMatrix(mat4x4);
     virtual GLfloat* toVertexArray();
     virtual GLfloat* toColorArray();
     virtual int numPoints();
@@ -30,22 +29,22 @@ struct Shape{
 };
 
 struct Triangle: public Shape{
-    Triangle(Vector3, Vector3, Vector3, Vector3 = Vector3(1.0f, 0.0f, 0.0f));
+    Triangle(vec3, vec3, vec3, vec3 = vec3(1.0f, 0.0f, 0.0f));
     int numVertices();
     int numColors();
     int numPoints();
 };
 
 struct Rectangle: public Shape{
-    Rectangle(Vector3, Vector3, Vector3, Vector3, Vector3 = Vector3(0.0f, 1.0f, 0.0f));
+    Rectangle(vec3, vec3, vec3, vec3, vec3 = vec3(0.0f, 1.0f, 0.0f));
 };
 
 struct Box: public Shape{
-    Box(Vector3 center, double height, double width, double length, Vector3 = Vector3(1.0f, 0.2f, 0.2f));
+    Box(vec3 center, double height, double width, double length, vec3 = vec3(1.0f, 0.2f, 0.2f));
 };
 
 struct Boxes: public Shape{
-    Boxes(int numBoxes, Vector3* centers, double* heights, double* widths, double* lengths, Vector3* colors);
+    Boxes(int numBoxes, vec3* centers, double* heights, double* widths, double* lengths, vec3* colors);
 };
 
 struct House: public Shape{

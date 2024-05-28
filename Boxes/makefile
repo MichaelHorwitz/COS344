@@ -1,5 +1,5 @@
 main: main.cpp glad.c
-	g++ -g shader.cpp NewMathLibrary/Vector.cpp NewMathLibrary/Matrix.cpp shapes.cpp main.cpp glad.c -lglfw -pthread -lGLEW -ldl -lGL -o main
+	g++ -g shader.cpp shapes.cpp main.cpp glad.c -lglfw -pthread -lGLEW -ldl -lGL -o main
 
 clean:
 	rm -f *.o *.txt main

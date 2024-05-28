@@ -108,9 +108,9 @@ int main()
     lastTime = glfwGetTime();
 
     // Here we create a the boxes object which consists of two boxes
-    Vector3 centers[2] = {
-        Vector3(0, 0, 0),
-        Vector3(-0.1, -0.1, -0.1)};
+    vec3 centers[2] = {
+        vec3(0, 0, 0),
+        vec3(-0.1, -0.1, -0.1)};
     double heights[2] = {
         0.2,
         0.2,
@@ -123,15 +123,11 @@ int main()
         0.2,
         0.2,
     };
-    Vector3 colors[2] = {
-        Vector3(0, 0, 1),
-        Vector3(1, 0, 0)};
-    Vector3 ul = Vector3(-0.2, 0.2, 0.3);
-    Vector3 ur = Vector3(0.2, 0.2, 0.3);
-    Vector3 ll = Vector3(-0.2, -0.2, 0.3);
-    Vector3 lr = Vector3(0.2, -0.2, 0.3);
-    // Shape *shp = new Boxes(2, centers, heights, widths, lengths, colors);
-    Shape *shp = new Rectangle(ul, ur, ll, lr, Vector3(0, 0, 1));
+    vec3 colors[2] = {
+        vec3(0, 0, 1),
+        vec3(1, 0, 0)};
+
+    Shape *shp = new Boxes(2, centers, heights, widths, lengths, colors);
 
     do
     {
@@ -188,58 +184,58 @@ int main()
         // Reminder: The examples use GLM but for the practicals you may not use GLM and all the matrix calculations needs to be done in the application not the shaders.
         if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
         {
-            Matrix4x4 rotationX = Matrix4x4(0.0f);
+            mat4x4 rotationX = mat4x4(0.0f);
 
-            rotationX[0][0] = 1;
-            rotationX[1][1] = cos(0.02);
-            rotationX[1][2] = -sin(0.02);
-            rotationX[2][1] = sin(0.02);
-            rotationX[2][2] = cos(0.02);
-            rotationX[3][3] = 1;
+            rotationX[0].x = 1;
+            rotationX[1].y = cos(0.02);
+            rotationX[1].z = -sin(0.02);
+            rotationX[2].y = sin(0.02);
+            rotationX[2].z = cos(0.02);
+            rotationX[3].w = 1;
 
-            Matrix4x4 rotationY = Matrix4x4(0.0f);
+            mat4x4 rotationY = mat4x4(0.0f);
 
-            rotationY[0][0] = cos(0.04);
-            rotationY[0][2] = -sin(0.04);
-            rotationY[1][1] = 1;
-            rotationY[2][0] = sin(0.04);
-            rotationY[2][2] = cos(0.04);
-            rotationY[3][3] = 1;
-            
-            Matrix4x4 rot = rot.convertTo4x4(rotationX * rotationY);
-            //rot.print();
-            shp->applyMatrix(rot);
+            rotationY[0].x = cos(0.04);
+            rotationY[0].z = -sin(0.04);
+            rotationY[1].y = 1;
+            rotationY[2].x = sin(0.04);
+            rotationY[2].z = cos(0.04);
+            rotationY[3].w = 1;
+
+            mat4x4 rot = rotationX * rotationY;
+
+            shp->applyMatrix(transpose(rot));
         }
         if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
         {
-            Matrix4x4 rotationX = Matrix4x4(0.0f);
+            mat4x4 rotationX = mat4x4(0.0f);
 
-            rotationX[0][0] = 1;
-            rotationX[1][1] = cos(-0.02);
-            rotationX[1][2] = -sin(-0.02);
-            rotationX[2][1] = sin(-0.02);
-            rotationX[2][2] = cos(-0.02);
-            rotationX[3][3] = 1;
+            rotationX[0].x = 1;
+            rotationX[1].y = cos(-0.02);
+            rotationX[1].z = -sin(-0.02);
+            rotationX[2].y = sin(-0.02);
+            rotationX[2].z = cos(-0.02);
+            rotationX[3].w = 1;
 
-            Matrix4x4 rotationY = Matrix4x4(0.0f);
+            mat4x4 rotationY = mat4x4(0.0f);
 
-            rotationY[0][0] = cos(0.04);
-            rotationY[0][2] = -sin(0.04);
-            rotationY[1][1] = 1;
-            rotationY[2][0] = sin(0.04);
-            rotationY[2][2] = cos(0.04);
-            rotationY[3][3] = 1;
+            rotationY[0].x = cos(0.04);
+            rotationY[0].z = -sin(0.04);
+            rotationY[1].y = 1;
+            rotationY[2].x = sin(0.04);
+            rotationY[2].z = cos(0.04);
+            rotationY[3].w = 1;
 
-            Matrix4x4 rot = rot.convertTo4x4(rotationX * rotationY);
+            mat4x4 rot = rotationX * rotationY;
 
-            shp->applyMatrix(rot);
+            shp->applyMatrix(transpose(rot));
         }
 
         // delete[] vertices;
         // delete[] colors;
 
         lastTime = currentTime;
-        //cout << "FPS: " << 1 / deltaTime << endl;
+        cout << "FPS: " << 1 / deltaTime << endl;
 
     } while (glfwGetKey(window, GLFW_KEY_SPACE) != GLFW_PRESS &&
              glfwWindowShouldClose(window) == 0);
