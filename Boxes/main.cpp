@@ -11,7 +11,8 @@
 #include <glm/glm.hpp>
 
 #include "shader.hpp"
-#include "shapes.h"
+//#include "shapes.h"
+#include "sceneObject.h"
 
 #define timeDT std::chrono::_V2::steady_clock::time_point
 
@@ -126,9 +127,21 @@ int main()
     vec3 colors[2] = {
         vec3(0, 0, 1),
         vec3(1, 0, 0)};
-
-    Shape *shp = new Boxes(2, centers, heights, widths, lengths, colors);
-
+    Triangle* trig = new Triangle(
+        vec3(0, 0.4, 0), 
+        vec3(-0.2, 0.2, 0), 
+        vec3(0.2, 0.2, 0),
+        vec4(1.0f, 1.0f, 0.0f, 1.0f)
+        );
+    Rectangle* rect = new Rectangle(
+        vec3(0.5, 0.5, 0),
+        vec3(-0.5, -0.5, 0),
+        vec4(1.0f, 0.0f, 0.0f, 1.0f)
+    );
+    SceneObject *so = new SceneObject();
+    so->children.push_back(trig);
+    so->children.push_back(rect);
+    // so = trig;
     do
     {
         float currentTime = glfwGetTime();
@@ -139,15 +152,15 @@ int main()
         glUseProgram(programID);
 
         // Here we obtain the vertices and colors for the house as two dynamic arrays.
-        GLfloat *vertices = shp->toVertexArray();
-        GLfloat *colors = shp->toColorArray();
+        GLfloat *vertices = so->toVertexArray();
+        GLfloat *colors = so->toColorArray();
         
         //  Here we bind the VBOs
         glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat[shp->numVertices()]), vertices, GL_STATIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat[so->numVertices()]), vertices, GL_STATIC_DRAW);
 
         glBindBuffer(GL_ARRAY_BUFFER, colorbuffer);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat[shp->numColors()]), colors, GL_STATIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat[so->numColors()]), colors, GL_STATIC_DRAW);
 
         // Here we enable the VAO and populate it.
         glEnableVertexAttribArray(0);
@@ -165,14 +178,14 @@ int main()
         glBindBuffer(GL_ARRAY_BUFFER, colorbuffer);
         glVertexAttribPointer(
             1,        // location 1 in the vertex shader.
-            3,        // size
+            4,        // size
             GL_FLOAT, // type
             GL_FALSE, // normalized?
             0,        // stride
             (void *)0 // array buffer offset
         );
 
-        glDrawArrays(GL_TRIANGLES, 0, shp->numPoints()); // Starting from vertex 0; 3 vertices total -> 1 triangle
+        glDrawArrays(GL_TRIANGLES, 0, so->numPoints()); // Starting from vertex 0; 3 vertices total -> 1 triangle
 
         glDisableVertexAttribArray(0);
         glDisableVertexAttribArray(1);
@@ -204,7 +217,7 @@ int main()
 
             mat4x4 rot = rotationX * rotationY;
 
-            shp->applyMatrix(transpose(rot));
+            so->applyMatrix(transpose(rot));
         }
         if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
         {
@@ -228,7 +241,7 @@ int main()
 
             mat4x4 rot = rotationX * rotationY;
 
-            shp->applyMatrix(transpose(rot));
+            so->applyMatrix(transpose(rot));
         }
 
         // delete[] vertices;
@@ -240,5 +253,5 @@ int main()
     } while (glfwGetKey(window, GLFW_KEY_SPACE) != GLFW_PRESS &&
              glfwWindowShouldClose(window) == 0);
 
-    delete shp;
+    delete so;
 }

@@ -1,13 +1,8 @@
 #version 330 core
 
-// Ouput data
-out vec3 color;
-in vec3 fragmentColor;
-
+in vec4 fragmentColor;
+out vec4 FragColor;
 void main()
 {
-
-	// Output color = red 
-	color = fragmentColor;
-
+   FragColor = fragmentColor;
 }
